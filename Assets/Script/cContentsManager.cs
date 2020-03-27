@@ -14,8 +14,14 @@ public class cContentsManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// 버튼의 OnClick() 에 장착함
+    /// 선택한 컨텐트외 나머지 모두 비활성화
+    /// </summary>
+    /// <param name="numContent"></param> 활성화 시킬 컨텐트 번호 
     public void SetContentSwitch(int numContent)
     {
+        //컨텐트의 번호는 1부터 시작한다.
         if (numContent < 1)
         {
             Debug.Log("1이상만 입렵가능");
