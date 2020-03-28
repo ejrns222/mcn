@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class cButtonManager : MonoBehaviour
+public class ButtonManager : MonoBehaviour
 {
     private Transform[] _childTransform;
     void Awake()
