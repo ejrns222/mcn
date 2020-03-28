@@ -52,5 +52,12 @@ public class Player : MonoBehaviour
       Jewel = 0;
       Money = 0;
    }
+
+   private void FixedUpdate()
+   {
+      Mileage++;
+      Jewel += 2;
+      Money += 3;
+   }
 }
 
