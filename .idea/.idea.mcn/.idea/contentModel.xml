@@ -8,6 +8,7 @@
       <e p="Assets" t="Include">
         <e p="Script" t="Include">
           <e p="ButtonManager.cs" t="Include" />
+          <e p="Charactor.cs" t="Include" />
           <e p="ContentsManager.cs" t="Include" />
           <e p="Player.cs" t="Include" />
           <e p="WealthToText.cs" t="Include" />
