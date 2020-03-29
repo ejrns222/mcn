@@ -18,8 +18,9 @@ public class Player : MonoBehaviour
    
    private static Player instance;
    
-   ////////////////////////TEST///////////////////////////// 배열에 넣어서 스트리머와 유튜버를 관리하는 방식으로 만들자
-   private DDeokuni _deokuni;
+   ////////////////////////TEST///////////////////////////// 리스트에 넣어서 스트리머와 유튜버를 관리하는 방식으로 만들자 팩토리메소드패턴 사용은 어떨까
+   private List<Streamer> _streamers = new List<Streamer>();
+   private List<Neotuber> _neotubers = new List<Neotuber>();
    /// //////////////////////////////////////////////////////
   
    
@@ -65,7 +66,12 @@ public class Player : MonoBehaviour
       Jewel = 0;
       Money = 0;
       ////////////////////////TEST/////////////////////////////
-      _deokuni = new DDeokuni();
+      _streamers.Add(Streamer.MakeStreamer(EStreamer.TestHun));
+      _streamers.Add(Streamer.MakeStreamer(EStreamer.TestHyun));
+      foreach (var v in _streamers)
+      {
+         v.TestLog();
+      }
       /// //////////////////////////////////////////////////
    }
 
@@ -76,7 +82,6 @@ public class Player : MonoBehaviour
       Money += 3;
       
       ////////////////////////TEST///////////////////////////// 프로퍼티로 사용할수 있게 바꿔보자. 혹은 1안. 마일리지 같은 재화를 클래스로 만들어서 재화가 증가하는 것을 계산해주는 함수를 만든다. 2안. 델리게이트를 만들고 각 캐릭터들이 계산함수를 들고있고 델리게이트에 전부 넣어버린다면?
-      _deokuni.Update(ref _mileage);
       ///  /// //////////////////////////////////////////////////
       
    }
