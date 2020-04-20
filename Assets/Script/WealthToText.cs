@@ -28,7 +28,7 @@ public class WealthToText : MonoBehaviour
                 _text.text = Player.Instance.Jewel.ToString();
                 break;
             case EWealth.Mileage:
-                _text.text = Player.Instance.Mileage.ToString();
+                _text.text = Player.Instance._mileage.ToString();
                 break;
             case EWealth.Money:
                 _text.text = Player.Instance.Money.ToString();
