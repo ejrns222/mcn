@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Wealths;
 
 public enum EWealth
 {
@@ -28,7 +29,7 @@ public class WealthToText : MonoBehaviour
                 _text.text = Player.Instance.Jewel.ToString();
                 break;
             case EWealth.Mileage:
-                _text.text = Player.Instance._mileage.ToString();
+                _text.text = CMileage.Instance.ConversedMileage();
                 break;
             case EWealth.Money:
                 _text.text = Player.Instance.Money.ToString();

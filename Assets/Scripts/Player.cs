@@ -2,16 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Wealths;
 
 public class Player : MonoBehaviour
 {
+   public GameObject objMileage; 
    
-   public uint _mileage; //클래스화 시키자
-   //public UInt64 Mileage 
-   //{
-   //   get { return _mileage; }
-   //   set { _mileage = value; } 
-   //} //관리하는 캐릭터들의 강화, 캐스팅, 굿즈 구입에 사용되는 재화
    public uint Jewel { get; set; } //유료재화
    public UInt64 Money { get; set; } //플레이어의 강화에 사용되는 재화
 
@@ -24,7 +21,7 @@ public class Player : MonoBehaviour
    ////////////////////////TEST/////////////////////////////
    
    public List<Streamer> _streamers = new List<Streamer>();
-   public List<Neotuber> _neotubers = new List<Neotuber>();
+   
    /// //////////////////////////////////////////////////////
   
    
@@ -80,15 +77,6 @@ public class Player : MonoBehaviour
       StartCoroutine("IncreaseMileage");
    }
 
-   private void FixedUpdate()
-   {
-
-
-      
-      ////////////////////////TEST///////////////////////////// 프로퍼티로 사용할수 있게 바꿔보자. 혹은 1안. 마일리지 같은 재화를 클래스로 만들어서 재화가 증가하는 것을 계산해주는 함수를 만든다. 2안. 델리게이트를 만들고 각 캐릭터들이 계산함수를 들고있고 델리게이트에 전부 넣어버린다면?
-
-   }
-
    public bool FindStreamer(EStreamer streamerName)
    {
       foreach (var v in _streamers)
@@ -102,15 +90,16 @@ public class Player : MonoBehaviour
 
    IEnumerator IncreaseMileage()
    {
+      CMileage mileage= objMileage.GetComponent<CMileage>();
       
       while (true)
       {
-         uint factor = 1;
+         uint factor = 100;
          foreach (var v in _streamers)
          {
             factor += v.Skill();
          }
-         _mileage += factor;
+         mileage.Value += factor;
          yield return new WaitForSeconds(1f);
       }
    }

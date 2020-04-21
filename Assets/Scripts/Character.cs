@@ -44,10 +44,7 @@ public class Streamer
     }
 }
 
-public class Neotuber
-{
-    
-}
+
 
 public class TestHun : Streamer
 {

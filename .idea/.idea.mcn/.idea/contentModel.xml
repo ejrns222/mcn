@@ -6,12 +6,15 @@
     <e p="C:\Users\User\Desktop\P\Unity\project\mcn" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="Script" t="Include">
+        <e p="Scripts" t="Include">
           <e p="ButtonManager.cs" t="Include" />
           <e p="Character.cs" t="Include" />
           <e p="ContentsManager.cs" t="Include" />
           <e p="Player.cs" t="Include" />
-          <e p="Wealths.cs" t="Include" />
+          <e p="Wealths" t="Include">
+            <e p="CMileage.cs" t="Include" />
+            <e p="UnitConversion.cs" t="Include" />
+          </e>
           <e p="WealthToText.cs" t="Include" />
         </e>
       </e>
