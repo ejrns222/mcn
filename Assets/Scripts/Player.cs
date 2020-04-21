@@ -7,8 +7,6 @@ using Wealths;
 
 public class Player : MonoBehaviour
 {
-   public GameObject objMileage; 
-   
    public uint Jewel { get; set; } //유료재화
    public UInt64 Money { get; set; } //플레이어의 강화에 사용되는 재화
 
@@ -90,7 +88,6 @@ public class Player : MonoBehaviour
 
    IEnumerator IncreaseMileage()
    {
-      CMileage mileage= objMileage.GetComponent<CMileage>();
       
       while (true)
       {
@@ -99,7 +96,7 @@ public class Player : MonoBehaviour
          {
             factor += v.Skill();
          }
-         mileage.Value += factor;
+         CMileage.Instance.Value += factor;
          yield return new WaitForSeconds(1f);
       }
    }

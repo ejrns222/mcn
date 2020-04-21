@@ -11,8 +11,13 @@
           <e p="Character.cs" t="Include" />
           <e p="ContentsManager.cs" t="Include" />
           <e p="Player.cs" t="Include" />
+          <e p="Util" t="Include">
+            <e p="Singleton.cs" t="Include" />
+          </e>
           <e p="Wealths" t="Include">
+            <e p="CJewel.cs" t="Include" />
             <e p="CMileage.cs" t="Include" />
+            <e p="CMoney.cs" t="Include" />
             <e p="UnitConversion.cs" t="Include" />
           </e>
           <e p="WealthToText.cs" t="Include" />
