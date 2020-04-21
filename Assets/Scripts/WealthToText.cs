@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Wealths;
 
@@ -13,7 +14,7 @@ public enum EWealth
 }
 public class WealthToText : MonoBehaviour
 {
-    public EWealth SelectedWealth;
+    public EWealth selectedWealth;
     private Text _text;
 
     private void Awake()
@@ -23,16 +24,16 @@ public class WealthToText : MonoBehaviour
 
     private void FixedUpdate()
     {
-        switch (SelectedWealth)
+        switch (selectedWealth)
         {
             case EWealth.Jewel:
-                _text.text = Player.Instance.Jewel.ToString();
+                _text.text = Jewel.Instance.ConversedJewel();
                 break;
             case EWealth.Mileage:
-                _text.text = CMileage.Instance.ConversedMileage();
+                _text.text = Mileage.Instance.ConversedMileage();
                 break;
             case EWealth.Money:
-                _text.text = Player.Instance.Money.ToString();
+                _text.text = Money.Instance.ConversedMoney();
                 break;
         }
         

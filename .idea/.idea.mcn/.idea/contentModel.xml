@@ -15,10 +15,8 @@
             <e p="Singleton.cs" t="Include" />
           </e>
           <e p="Wealths" t="Include">
-            <e p="CJewel.cs" t="Include" />
-            <e p="CMileage.cs" t="Include" />
-            <e p="CMoney.cs" t="Include" />
             <e p="UnitConversion.cs" t="Include" />
+            <e p="Wealths.cs" t="Include" />
           </e>
           <e p="WealthToText.cs" t="Include" />
         </e>
