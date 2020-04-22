@@ -36,6 +36,5 @@ public class WealthToText : MonoBehaviour
                 _text.text = Money.Instance.ConversedMoney();
                 break;
         }
-        
     }
 }

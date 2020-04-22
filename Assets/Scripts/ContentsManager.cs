@@ -6,17 +6,16 @@ using UnityEngine;
 public class ContentsManager : MonoBehaviour
 {
     private Transform[] _childTransform;
-    void Awake()
+
+    private void Awake()
     {
         _childTransform = new Transform[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
             _childTransform[i] = transform.GetChild(i);
-        
     }
 
     /// <summary>
-    /// 버튼의 OnClick() 에 장착함
-    /// 선택한 컨텐트외 나머지 모두 비활성화
+    /// @brief : 선택한 컨텐트만 활성화, 나머지는 비활성화
     /// </summary>
     /// <param name="numContent"></param> 활성화 시킬 컨텐트 번호 
     public void SetContentSwitch(int numContent)
@@ -37,5 +36,4 @@ public class ContentsManager : MonoBehaviour
         if(!temp.activeSelf)
             temp.SetActive(true);
     }
-
 }

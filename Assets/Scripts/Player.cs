@@ -3,15 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Util;
 using Wealths;
 
 public class Player : MonoBehaviour
 {
    public static Player Instance = null;
    
-   
-   public List<Streamer> streamers = new List<Streamer>();
-
+   public List<GameObject> streamers = new List<GameObject>();
 
    private void Awake()
    {
@@ -22,12 +21,8 @@ public class Player : MonoBehaviour
       DontDestroyOnLoad(gameObject);
 
       ////////////////////////TEST/////////////////////////////
-      streamers.Add(Streamer.MakeStreamer(EStreamer.TestHun));
-      streamers.Add(Streamer.MakeStreamer(EStreamer.TestHyun));
-      foreach (var v in streamers)
-      {
-         v.TestLog();
-      }
+      //streamers.Add(Streamer.MakeStreamer(EStreamer.TestHun));
+      // streamers.Add(Streamer.MakeStreamer(EStreamer.TestHyun));
       //////////////////////////////////////////////////////////
       
       StartCoroutine(nameof(IncreaseMileage));
@@ -37,7 +32,8 @@ public class Player : MonoBehaviour
    {
       foreach (var v in streamers)
       {
-         if (v.Tag == streamerName)
+        // if (v.Tag == streamerName)
+        if(v.GetComponent<IStreamer>().Tag == streamerName)
             return true;
       }
 
@@ -51,7 +47,8 @@ public class Player : MonoBehaviour
          uint factor = 100;
          foreach (var v in streamers)
          {
-            factor += v.Skill();
+            // factor += v.Skill();
+            factor += v.GetComponent<IStreamer>().Skill();
          }
          Mileage.Instance.Value += factor;
          yield return new WaitForSeconds(1f);

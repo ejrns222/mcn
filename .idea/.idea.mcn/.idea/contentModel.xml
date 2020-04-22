@@ -8,10 +8,16 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="ButtonManager.cs" t="Include" />
-          <e p="Character.cs" t="Include" />
+          <e p="Characters" t="Include">
+            <e p="Streamers" t="Include">
+              <e p="CTestHun.cs" t="Include" />
+              <e p="CTestHyun.cs" t="Include" />
+            </e>
+          </e>
           <e p="ContentsManager.cs" t="Include" />
           <e p="Player.cs" t="Include" />
           <e p="Util" t="Include">
+            <e p="Interfaces.cs" t="Include" />
             <e p="Singleton.cs" t="Include" />
           </e>
           <e p="Wealths" t="Include">
