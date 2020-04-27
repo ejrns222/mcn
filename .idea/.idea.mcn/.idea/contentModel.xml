@@ -8,6 +8,7 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="ButtonManager.cs" t="Include" />
+          <e p="CEarnedWealthRenderer.cs" t="Include" />
           <e p="Characters" t="Include">
             <e p="Streamers" t="Include">
               <e p="CTestHun.cs" t="Include" />
@@ -15,6 +16,7 @@
             </e>
           </e>
           <e p="ContentsManager.cs" t="Include" />
+          <e p="CWealthRenderer.cs" t="Include" />
           <e p="Player.cs" t="Include" />
           <e p="Util" t="Include">
             <e p="Interfaces.cs" t="Include" />
@@ -24,7 +26,6 @@
             <e p="UnitConversion.cs" t="Include" />
             <e p="Wealths.cs" t="Include" />
           </e>
-          <e p="WealthToText.cs" t="Include" />
         </e>
       </e>
       <e p="mcn.sln" t="IncludeFlat" />

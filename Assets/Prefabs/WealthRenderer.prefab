@@ -200,7 +200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ae1a430c5ec52f418ad0700b72bbe2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedWealth: 0
+  selectedWealth: 0
+  earnedWealthPrefab: {fileID: 0}
 --- !u!114 &5334983512331930569
 MonoBehaviour:
   m_ObjectHideFlags: 0

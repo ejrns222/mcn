@@ -9,8 +9,12 @@ using Wealths;
 public class Player : MonoBehaviour
 {
    public static Player Instance = null;
-   
    public List<GameObject> streamers = new List<GameObject>();
+   public uint basicSalary = 1000;
+
+   private delegate void wealthIncreaseHandler(uint value);
+
+   private wealthIncreaseHandler onIncreaseMileage;
 
    private void Awake()
    {
@@ -19,6 +23,10 @@ public class Player : MonoBehaviour
       else if(Instance != this)
          Destroy(gameObject);
       DontDestroyOnLoad(gameObject);
+      
+      onIncreaseMileage = new wealthIncreaseHandler(GameObject.Find("Mileage").transform.Find("Text").GetComponent<CWealthRenderer>().RenderEarnedWealth);
+      if(onIncreaseMileage == null)
+         Debug.Log("delegate null");
 
       ////////////////////////TEST/////////////////////////////
       //streamers.Add(Streamer.MakeStreamer(EStreamer.TestHun));
@@ -32,7 +40,6 @@ public class Player : MonoBehaviour
    {
       foreach (var v in streamers)
       {
-        // if (v.Tag == streamerName)
         if(v.GetComponent<IStreamer>().Tag == streamerName)
             return true;
       }
@@ -44,15 +51,23 @@ public class Player : MonoBehaviour
    {
       while (true)
       {
-         uint factor = 100;
-         foreach (var v in streamers)
-         {
-            // factor += v.Skill();
-            factor += v.GetComponent<IStreamer>().Skill();
-         }
-         Mileage.Instance.Value += factor;
+         uint calculatedSalary = CalcRealSalary();
+         Mileage.Instance.Value += calculatedSalary;
+         onIncreaseMileage(calculatedSalary);
+
          yield return new WaitForSeconds(1f);
       }
+   }
+
+   public uint CalcRealSalary()
+   {
+      uint realSalary = basicSalary;
+      foreach (var v in streamers)
+      {
+         realSalary += v.GetComponent<IStreamer>().Skill();
+      }
+
+      return realSalary;
    }
 }
 

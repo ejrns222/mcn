@@ -2291,6 +2291,11 @@ PrefabInstance:
       propertyPath: SelectedWealth
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5334983512331930550, guid: 4cd52e481447b094abfd2982fc65a7c2,
+        type: 3}
+      propertyPath: selectedWealth
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5334983512331930551, guid: 4cd52e481447b094abfd2982fc65a7c2,
         type: 3}
       propertyPath: m_Text
@@ -3716,6 +3721,11 @@ PrefabInstance:
       propertyPath: SelectedWealth
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5334983512331930550, guid: 4cd52e481447b094abfd2982fc65a7c2,
+        type: 3}
+      propertyPath: selectedWealth
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5334983512331930551, guid: 4cd52e481447b094abfd2982fc65a7c2,
         type: 3}
       propertyPath: m_Text
@@ -4596,12 +4606,12 @@ PrefabInstance:
     - target: {fileID: 3088164163350257537, guid: 60545ff30a2d77b4bb371028c497b62a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 183.2373
+      value: 99
       objectReference: {fileID: 0}
     - target: {fileID: 3088164163350257537, guid: 60545ff30a2d77b4bb371028c497b62a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 377.76566
+      value: 340
       objectReference: {fileID: 0}
     - target: {fileID: 3088164163350257537, guid: 60545ff30a2d77b4bb371028c497b62a,
         type: 3}
@@ -4655,8 +4665,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3088164163350257538, guid: 60545ff30a2d77b4bb371028c497b62a,
         type: 3}
+      propertyPath: streamers.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088164163350257538, guid: 60545ff30a2d77b4bb371028c497b62a,
+        type: 3}
       propertyPath: objMileage
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088164163350257538, guid: 60545ff30a2d77b4bb371028c497b62a,
+        type: 3}
+      propertyPath: streamers.Array.data[0]
+      value: 
+      objectReference: {fileID: 6193104174953609066, guid: 96e7eff79f9932a4b85b379f03f8fd00,
+        type: 3}
+    - target: {fileID: 3088164163350257538, guid: 60545ff30a2d77b4bb371028c497b62a,
+        type: 3}
+      propertyPath: streamers.Array.data[1]
+      value: 
+      objectReference: {fileID: 8341558298485536036, guid: 6ad10aeed3b926745aec2298a75ade2f,
+        type: 3}
+    - target: {fileID: 3088164163350257538, guid: 60545ff30a2d77b4bb371028c497b62a,
+        type: 3}
+      propertyPath: basicSalary
+      value: 100000
       objectReference: {fileID: 0}
     - target: {fileID: 3088164163350257539, guid: 60545ff30a2d77b4bb371028c497b62a,
         type: 3}
@@ -4677,6 +4709,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mileage
       objectReference: {fileID: 0}
+    - target: {fileID: 5334983512331930550, guid: 4cd52e481447b094abfd2982fc65a7c2,
+        type: 3}
+      propertyPath: earnedWealthPrefab
+      value: 
+      objectReference: {fileID: 790637602371247289, guid: 5a5f01e5372965d4b92a5938ee483b6a,
+        type: 3}
     - target: {fileID: 5334983512331930551, guid: 4cd52e481447b094abfd2982fc65a7c2,
         type: 3}
       propertyPath: m_Text
@@ -4697,10 +4735,20 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5334983512331930569, guid: 4cd52e481447b094abfd2982fc65a7c2,
+    - target: {fileID: 5334983512331930568, guid: 4cd52e481447b094abfd2982fc65a7c2,
         type: 3}
-      propertyPath: m_HorizontalFit
-      value: 2
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334983512331930568, guid: 4cd52e481447b094abfd2982fc65a7c2,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5334983512331930568, guid: 4cd52e481447b094abfd2982fc65a7c2,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5334983512331930569, guid: 4cd52e481447b094abfd2982fc65a7c2,
         type: 3}
