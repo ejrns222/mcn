@@ -12,7 +12,7 @@ namespace Wealths
     /// <summary>
     /// @Singleton
     /// @brief : 플레이어가 보유한 캐릭터들을 성장시키는 재화
-    /// @TODO : 현재까지는 다른 재화들과 코드가 다를바가 없음. 굳이 클래스를 따로 만들어야할까? 전역으로 사용되고 싱글톤이라 어쩔수 없긴한데 한번 생각해보자.
+    /// @TODO : 클래스 합치기
     /// </summary>
     public class Mileage : Singleton<Mileage>,IWealth
     {
@@ -23,15 +23,13 @@ namespace Wealths
         {
             return UnitConversion.ConverseUnit(Value).ConversedUnitToString();
         }
-        
-        
     }
     
     /// <summary>
     /// @Singleton
     /// @brief : 플레이어를 강화시키는 재화
     /// </summary>
-    public class Money : Singleton<Money>,IWealth
+    public class Gold : Singleton<Gold>,IWealth
     {
         public BigInteger Value { get; set; } = 0;
 
