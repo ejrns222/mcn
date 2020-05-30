@@ -28,6 +28,7 @@ public class CSaveLoadManager : MonoBehaviour
     public void CreateJsonFile(object obj, string createPath, string fileName)
     {
         string jsonData = Encrypt(JsonUtility.ToJson(obj),key);
+        Debug.Log(JsonUtility.ToJson(obj));
         FileStream fileStream = new FileStream(Application.dataPath + $"/{createPath}/{fileName}.json", FileMode.Create);
         byte[] data = Encoding.UTF8.GetBytes(jsonData);
         fileStream.Write(data, 0, data.Length);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace Util
+namespace Characters
 {
     public enum EStreamer
     {
@@ -14,8 +14,6 @@ namespace Util
     {
         F,E,D,C,B,A,
     }
-    
-
 
     public interface IStreamer
     {
@@ -32,7 +30,7 @@ namespace Util
             get;
         }
 
-        //초기 구독자 수
+        //구독자 증가 폭
         uint IncreaseSubs
         {
             get;
@@ -52,6 +50,7 @@ namespace Util
             set;
         }
 
+        //광고 레벨 : 구독자 수 증가 폭과 관련
         uint AdLevel
         {
             get;

@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using Characters;
 using UnityEngine;
 using UnityEngine.UI;
 using Util;
 using Wealths;
 using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 //골드 수급하는 컨텐츠
 public class CVideoEdit : MonoBehaviour
@@ -31,11 +33,16 @@ public class CVideoEdit : MonoBehaviour
             GameObject tmp;
             tmp = Instantiate(editButtonPrefab.gameObject, GameObject.Find("EditButtons").transform);
             CEditButton tmpEditButton = tmp.GetComponent<CEditButton>();
-            IStreamer currentStreamer = v.GetComponent<IStreamer>();
-            tmpEditButton.price = currentStreamer.AdPrice;
+            tmpEditButton.price = v.AdPrice;
             tmpEditButton.buttonText = tmp.GetComponentInChildren<Text>();
-            tmpEditButton.buttonText.text = currentStreamer.Tag.ToString();
+            tmpEditButton.buttonText.text = "이름 : " + v.Tag + 
+                                            "\n광고레벨 : " + v.AdLevel +
+                                            "\n광고가격 : " + v.AdPrice;
+            tmpEditButton.buttonText.transform.localPosition = new Vector3(360,-80,0);
+            tmpEditButton.buttonText.fontSize = 35;
             tmpEditButton.streamer = v;
+            tmpEditButton.image = tmp.transform.GetChild(1).GetComponent<Image>();
+            tmpEditButton.image.sprite = Resources.Load<Sprite>("CharacterImage/" + v.Tag.ToString());
         }
     }
 
@@ -56,12 +63,11 @@ public class CVideoEdit : MonoBehaviour
         GameObject.Find("Gold").GetComponent<CWealthRenderer>().RenderEarnedWealth(calculatedGold);
 
         int idx = Random.Range(0, Player.Instance.equippedStreamers.Count);
-        Player.Instance.equippedStreamers[idx].GetComponent<IStreamer>().Subscribers++;
+        Player.Instance.equippedStreamers[idx].Subscribers++;
 
         foreach (var v in Player.Instance.equippedStreamers)
         {
-            var tmp = v.GetComponent<IStreamer>();
-            tmp.Subscribers += (uint)((float)tmp.IncreaseSubs * ((float)tmp.AdLevel / 2f));
+            v.Subscribers += (uint)((float)v.IncreaseSubs * ((float)v.AdLevel / 2f));
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Characters;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -21,7 +22,7 @@ public class CCharacterChanger : MonoBehaviour
             slot = Instantiate(slotPrefab.gameObject, GameObject.Find("CharacterChangeSlots").transform);
             _slotList.Add(slot);
 
-            slot.GetComponentInChildren<Text>().text = v.name;
+            slot.GetComponentInChildren<Text>().text = v.Tag.ToString();
             slot.GetComponent<CCharacterSlot>().streamer = v;
         }
     }
@@ -41,7 +42,7 @@ public class CCharacterChanger : MonoBehaviour
         }
         else
         {
-            GameObject tmp = CInventory.Instance.streamerList[invenIdx];
+            var tmp = CInventory.Instance.streamerList[invenIdx];
             CInventory.Instance.streamerList[invenIdx] = Player.Instance.equippedStreamers[equipIdx];
             Player.Instance.equippedStreamers[equipIdx] = tmp;
         }

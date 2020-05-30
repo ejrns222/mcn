@@ -1,10 +1,8 @@
 ﻿using System.Numerics;
-using UnityEngine;
-using Util;
 
 namespace Characters.Streamers
 {
-    public class CTestHun : MonoBehaviour,IStreamer
+    public class CTestHun : IStreamer
     {
         public EStreamer Tag { get; } = EStreamer.TestHun;
 

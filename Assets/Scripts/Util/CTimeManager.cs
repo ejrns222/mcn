@@ -1,11 +1,22 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.Video;
 using Wealths;
+
+/// <summary>
+/// @brief : JsonUtility로 DateTime을 Serialize할 수 없음. 이걸 쓰면 가능 
+/// </summary>
+struct JsonDateTime {
+    public long value;
+    public static implicit operator DateTime(JsonDateTime jdt) {
+        return DateTime.FromFileTime(jdt.value);
+    }
+    public static implicit operator JsonDateTime(DateTime dt) {
+        JsonDateTime jdt = new JsonDateTime();
+        jdt.value = dt.ToFileTime();
+        return jdt;
+    }
+}
 
 /// <summary>
 /// @brief : 싱글톤, 게임상 1시간 혹은 1일마다 호출되는 델리게이트를 가짐
@@ -18,7 +29,7 @@ public class CTimeManager : MonoBehaviour
         public float DeltaTimeForHour;
         public float DeltaTimeForDay;
         public float DeltaTimeForYear;
-        public DateTime LastTime;
+        public string LastTime;
     }
     
     public static CTimeManager Instance = null;
@@ -65,7 +76,7 @@ public class CTimeManager : MonoBehaviour
         Debug.Log(_currentTime);
         
         ///////TEST///////
-        _lastTime = new DateTime(2020,5,27,23,20,35);
+        //_lastTime = new DateTime(2020,5,27,23,20,35);
         
         OfflineReward();
     }
@@ -87,6 +98,7 @@ public class CTimeManager : MonoBehaviour
         {
             Debug.Log("OnOneGameDay");
             onOneDayElapse?.Invoke();
+            GameObject.Find("Monitoring")?.GetComponent<CMonitoring>()?.Refresh();
             _deltaTimeForDay -= OneDay;
         }
 
@@ -119,7 +131,7 @@ public class CTimeManager : MonoBehaviour
         var deltaRealTime = (float)offlineElapsedTime.TotalSeconds;
         float deltaGameTime = 0f;
         
-        Debug.Log("마지막 접속 후 지난 실제 시간 : " + offlineElapsedTime);
+        Debug.Log("마지막 접속 후 지난 실제 시간 : " + offlineElapsedTime.Hours);
         
         //
         if (deltaRealTime / 3600f > 3600f * 12f)
@@ -154,7 +166,7 @@ public class CTimeManager : MonoBehaviour
     {
         SavedTime times = new SavedTime
         {
-            LastTime = _lastTime,
+            LastTime = JsonUtility.ToJson((JsonDateTime)_lastTime),
             DeltaTimeForDay = _deltaTimeForDay,
             DeltaTimeForHour = _deltaTimeForHour,
             DeltaTimeForYear = _deltaTimeForYear
@@ -177,7 +189,8 @@ public class CTimeManager : MonoBehaviour
             return;
         }
 
-        _lastTime = times.LastTime;
+        _lastTime = JsonUtility.FromJson<JsonDateTime>(times.LastTime);
+        Debug.Log("마지막 접속 시간 : " + _lastTime);
         _deltaTimeForDay = times.DeltaTimeForDay;
         _deltaTimeForHour = times.DeltaTimeForHour;
         _deltaTimeForYear = times.DeltaTimeForYear;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using Characters;
 using Characters.Streamers;
 using UnityEngine;
 using Util;
@@ -9,7 +9,7 @@ using Util;
 public class Player : MonoBehaviour
 {
    public static Player Instance = null;
-   public List<GameObject> equippedStreamers = new List<GameObject>();
+   public List<IStreamer> equippedStreamers = new List<IStreamer>();
    //TODO : 캐릭터들 MonoBehavior상속 모두 뺴버리고 IStreamer로 사용하게 끔 한뒤 생성자나 업데이트문으로 필요한거 있으면 돌리는게 좋을 듯
    
    /////////////////////플레이어 스텟///////////////////////////
@@ -34,7 +34,8 @@ public class Player : MonoBehaviour
          Destroy(gameObject);
       DontDestroyOnLoad(gameObject);
 
-      //streamers.Add(Resources.Load("CharacterPrefabs/TestHun") as GameObject);
+      equippedStreamers.Add(new CTestHun());
+      equippedStreamers.Add(new CTestHyun());
       
    }
 
@@ -42,35 +43,11 @@ public class Player : MonoBehaviour
    {
       foreach (var v in equippedStreamers)
       {
-        if(v.GetComponent<IStreamer>().Tag == streamerName)
+        if(v.Tag == streamerName)
             return true;
       }
 
       return false;
-   }
-
-   public void IncreaseSubscriber()
-   {
-      foreach (var v in equippedStreamers)
-      {
-         ERank rank = v.GetComponent<IStreamer>().Rank;
-
-         switch (rank)
-         {
-            case ERank.F:
-               break;
-            case ERank.E:
-               break;
-            case ERank.D:
-               break;
-            case ERank.C:
-               break;
-            case ERank.B:
-               break;
-            case ERank.A:
-               break;
-         }
-      }
    }
 }
 

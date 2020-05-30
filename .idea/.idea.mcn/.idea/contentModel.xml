@@ -10,6 +10,7 @@
           <e p="CCharacterSlot.cs" t="Include" />
           <e p="CEditButton.cs" t="Include" />
           <e p="Characters" t="Include">
+            <e p="CharacterInterface.cs" t="Include" />
             <e p="Streamers" t="Include">
               <e p="CTestHun.cs" t="Include" />
               <e p="CTestHyun.cs" t="Include" />
@@ -19,6 +20,7 @@
           <e p="CInventory.cs" t="Include" />
           <e p="ContentScripts" t="Include">
             <e p="CMonitoring.cs" t="Include" />
+            <e p="CSelfCare.cs" t="Include" />
             <e p="CVideoEdit.cs" t="Include" />
           </e>
           <e p="Player.cs" t="Include" />
@@ -29,7 +31,6 @@
             <e p="CPopUpWindow.cs" t="Include" />
           </e>
           <e p="Util" t="Include">
-            <e p="CharacterUtil.cs" t="Include" />
             <e p="CSaveLoadManager.cs" t="Include" />
             <e p="CTimeManager.cs" t="Include" />
             <e p="Singleton.cs" t="Include" />
