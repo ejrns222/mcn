@@ -20,10 +20,8 @@ public class CInventory : MonoBehaviour
         
         //테스트용
         streamerList.Add(new CTestTaek());
-        streamerList.Add(new CTestTaek());
-        streamerList.Add(new CTestTaek());
-        streamerList.Add(new CTestTaek());
-        streamerList.Add(new CTestTaek());
+        streamerList.Add(new CTestHun());
+        streamerList.Add(new CTestHyun());
         
         gameObject.SetActive(false);
     }

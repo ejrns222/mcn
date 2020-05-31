@@ -14,40 +14,44 @@ public class MonitoringButton
 {
     public Button Button;
     public Image Image;
-    public Text ButtonText;
+    public Text SlotText;
     public Text PriceText;
     public IStreamer Streamer;
     public bool IsLocked;
     public bool IsOpen;
     public BigInteger Price;
+    public int Idx;
 }
 
 public class CMonitoring : MonoBehaviour
 {
-    //private List<Text> _buttonTexts;
-    private List<MonitoringButton> _monitoringButtons;
+    //private List<MonitoringButton> _monitoringButtons;
+    private MonitoringButton[] _monitoringButtons;
     public GameObject characterChangerPopupWindow;
 
     private void Awake()
     {
-        _monitoringButtons = new List<MonitoringButton>(8);
-
-        var buttons = transform.GetChild(0).GetChild(0).GetChild(0);
-        for (int i = 0; i < buttons.childCount; i++)
+        //_monitoringButtons = new List<MonitoringButton>(8);
+        _monitoringButtons = new MonitoringButton[8];
+        
+        var slots = transform.GetChild(0).GetChild(0).GetChild(0);
+        for (int i = 0; i < slots.childCount; i++)
         {
-            var v = buttons.GetChild(i).GetComponent<Button>();
+            var v = slots.GetChild(i);
             var tmp = new MonitoringButton
             {
-                Button = v,
-                ButtonText = v.transform.Find("Text").GetComponent<Text>(),
-                PriceText = v.transform.Find("priceText").GetComponent<Text>()
+                Button = v.GetComponentInChildren<Button>(),
+                SlotText = v.transform.Find("Text").GetComponent<Text>(),
+                PriceText = v.transform.Find("Button").Find("priceText").GetComponent<Text>(),
+                Idx = i
             };
-            tmp.ButtonText.text = "Lock";
+            tmp.SlotText.text = "Lock";
             tmp.IsLocked = true;
             tmp.IsOpen = false;
             tmp.Image = v.transform.GetChild(1).GetComponent<Image>();
             
-            _monitoringButtons.Add(tmp);
+            //_monitoringButtons.Add(tmp);
+            _monitoringButtons[i] = tmp;
         }
         
         /*foreach (var v in transform.GetChild(0).GetComponentsInChildren<Button>())
@@ -70,7 +74,7 @@ public class CMonitoring : MonoBehaviour
         for (var i = 0; i < Player.Instance.maxNumStreamers; i++)
         {
             var monitoringButton = _monitoringButtons[i];
-            monitoringButton.ButtonText.text = "Empty";
+            monitoringButton.SlotText.text = "Empty";
             monitoringButton.IsLocked = false; //잠김유무 : 스트리머를 등록 할 수 있느냐 없느냐
             monitoringButton.IsOpen = true; //구매가능 여부 : 언락한 다음버튼까지만 눌렀을 때 이벤트 발생함 
         }
@@ -91,8 +95,12 @@ public class CMonitoring : MonoBehaviour
 
             foreach (var v in _monitoringButtons)
             {
-                v.PriceText.text = "필요 마일리지 : " + v.Price.ToString();
+                v.PriceText.text = UnitConversion.ConverseUnit(v.Price).ConversedUnitToString();
+                v.Button.transform.Find("Text").GetComponent<Text>().text = "구매 불가";
             }
+
+            _monitoringButtons[Player.Instance.maxNumStreamers].Button.transform.Find("Text").GetComponent<Text>()
+                .text = "구매 가능";
         }
         
         //여긴 테스트용임
@@ -110,23 +118,30 @@ public class CMonitoring : MonoBehaviour
     {
         for (int i = 0; i < Player.Instance.maxNumStreamers; i++)
         {
-            _monitoringButtons[i].ButtonText.text = "Empty";
+            _monitoringButtons[i].SlotText.text = "Empty";
             _monitoringButtons[i].Image.sprite = null;
             _monitoringButtons[i].Image.color = new Color(255, 255, 255, 0);
-            _monitoringButtons[i].ButtonText.fontSize = 70;
+            _monitoringButtons[i].SlotText.fontSize = 70;
             _monitoringButtons[i].PriceText.text = "";
+            _monitoringButtons[i].Streamer = null;
+            _monitoringButtons[i].Button.transform.Find("Text").GetComponent<Text>().text = "장착/해제";
+            Destroy(_monitoringButtons[i].Button.transform.Find("WealthImg").GetComponent<Image>());
         }
         
-        for (int i = 0; i < Player.Instance.equippedStreamers.Count; i++)
+        for (int i = 0; i < Player.Instance.equippedStreamers.Length; i++)
         {
-            _monitoringButtons[i].ButtonText.text = "이름 : " + Player.Instance.equippedStreamers[i].Tag.ToString() + 
+            //
+            if(Player.Instance.equippedStreamers[i] == null)
+                continue;
+           
+            _monitoringButtons[i].SlotText.text = "이름 : " + Player.Instance.equippedStreamers[i].Tag.ToString() + 
                                                     "\nRank : " + Player.Instance.equippedStreamers[i].Rank.ToString() +
                                                     "\n구독자 수 : " + Player.Instance.equippedStreamers[i].Subscribers;
             _monitoringButtons[i].Streamer = Player.Instance.equippedStreamers[i];
             _monitoringButtons[i].Image.sprite = Resources.Load<Sprite>("CharacterImage/" + Player.Instance.equippedStreamers[i].Tag.ToString());
             _monitoringButtons[i].Image.color = Color.white;
-            _monitoringButtons[i].ButtonText.transform.localPosition = new Vector3(360,-80,0);
-            _monitoringButtons[i].ButtonText.fontSize = 35;
+            _monitoringButtons[i].SlotText.transform.localPosition = new Vector3(320,-80,0);
+            _monitoringButtons[i].SlotText.fontSize = 35;
         }
     }
         
@@ -146,12 +161,19 @@ public class CMonitoring : MonoBehaviour
         BigInteger calculatedMileage = 0;
         foreach (var v in Player.Instance.equippedStreamers)
         {
+            //
+            if(v == null)
+                continue;
+            
             calculatedMileage += (uint)(v.Subscribers * LevelCorrection(v.Rank));
         }
 
         BigInteger skilledMileage = 0;
         foreach (var v in Player.Instance.equippedStreamers)
         {
+            //
+            if(v == null)
+                continue;
             skilledMileage += v.Skill(calculatedMileage);
         }
         calculatedMileage += skilledMileage;
@@ -188,6 +210,7 @@ public class CMonitoring : MonoBehaviour
         return 0.0f;
     }
 
+    //TODO : 버튼을 넣지말고 addListener에 넣는걸로 바꾸자
     public void ButtonClick(Button button)
     {
         var clickedButton = _monitoringButtons[0];
@@ -211,6 +234,7 @@ public class CMonitoring : MonoBehaviour
             Debug.Log("Unlock Button Click");
             characterChangerPopupWindow.SetActive(true);
             characterChangerPopupWindow.GetComponent<CCharacterChanger>().clickedButton = clickedButton;
+            
             return;
         }
 
@@ -235,11 +259,12 @@ public class CMonitoring : MonoBehaviour
             if (Mileage.Instance.Value >= clickedButton.Price)
             {
                 Mileage.Instance.Value -= clickedButton.Price;
-                clickedButton.ButtonText.text = "Empty";
+                clickedButton.SlotText.text = "Empty";
                 clickedButton.IsLocked = false;
                 Player.Instance.maxNumStreamers++;
-                if(idx+1 < _monitoringButtons.Count)
+                if(idx+1 < _monitoringButtons.Length)
                     _monitoringButtons[idx+1].IsOpen = true;
+                Refresh();
             }
         }
     }

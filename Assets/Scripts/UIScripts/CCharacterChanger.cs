@@ -34,11 +34,15 @@ public class CCharacterChanger : MonoBehaviour
     public void CharacterChange(GameObject slot)
     {
         int invenIdx = CInventory.Instance.streamerList.IndexOf(slot.GetComponent<CCharacterSlot>().streamer);
-        int equipIdx = Player.Instance.equippedStreamers.IndexOf(clickedButton.Streamer);
+        //int equipIdx = Player.Instance.equippedStreamers.IndexOf(clickedButton.Streamer);
+        int equipIdx = Array.FindIndex(Player.Instance.equippedStreamers, i => i == clickedButton.Streamer);
 
-        if (equipIdx == -1)
+        //if (equipIdx == -1)
+        if(clickedButton.Streamer == null)
         {
-            Player.Instance.equippedStreamers.Add(CInventory.Instance.streamerList[invenIdx]);
+            //Player.Instance.equippedStreamers.Add(CInventory.Instance.streamerList[invenIdx]);
+            Player.Instance.equippedStreamers[clickedButton.Idx] = CInventory.Instance.streamerList[invenIdx];
+            CInventory.Instance.streamerList.RemoveAt(invenIdx);
         }
         else
         {
@@ -56,9 +60,11 @@ public class CCharacterChanger : MonoBehaviour
     /// </summary>
     public void CharacterRemove()
     {
-        int equipIdx = Player.Instance.equippedStreamers.IndexOf(clickedButton.Streamer);
+        //int equipIdx = Player.Instance.equippedStreamers.IndexOf(clickedButton.Streamer);
+        int equipIdx = Array.FindIndex(Player.Instance.equippedStreamers, i => i == clickedButton.Streamer);
         CInventory.Instance.streamerList.Add(Player.Instance.equippedStreamers[equipIdx]);
-        Player.Instance.equippedStreamers.RemoveAt(equipIdx);
+        Player.Instance.equippedStreamers[equipIdx] = null;
+        clickedButton = null;
         
         GameObject.Find("Monitoring").GetComponent<CMonitoring>().Refresh();
         gameObject.SetActive(false);

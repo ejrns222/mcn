@@ -9,8 +9,8 @@ using Util;
 public class Player : MonoBehaviour
 {
    public static Player Instance = null;
-   public List<IStreamer> equippedStreamers = new List<IStreamer>();
-   //TODO : 캐릭터들 MonoBehavior상속 모두 뺴버리고 IStreamer로 사용하게 끔 한뒤 생성자나 업데이트문으로 필요한거 있으면 돌리는게 좋을 듯
+//   public List<IStreamer> equippedStreamers = new List<IStreamer>();
+   public IStreamer[] equippedStreamers = new IStreamer[8];
    
    /////////////////////플레이어 스텟///////////////////////////
    public uint maxNumStreamers;
@@ -34,16 +34,24 @@ public class Player : MonoBehaviour
          Destroy(gameObject);
       DontDestroyOnLoad(gameObject);
 
-      equippedStreamers.Add(new CTestHun());
-      equippedStreamers.Add(new CTestHyun());
+      //equippedStreamers.Add(new CTestHun());
+      //equippedStreamers.Add(new CTestHyun());
       
    }
 
    public bool FindStreamer(EStreamer streamerName)
    {
-      foreach (var v in equippedStreamers)
+      /*foreach (var v in equippedStreamers)
       {
+         
         if(v.Tag == streamerName)
+            return true;
+      }*/
+      for (int i = 0; i < equippedStreamers.Length; i++)
+      {
+         if(equippedStreamers[i] == null)
+            continue;
+         if (equippedStreamers[i].Tag == streamerName)
             return true;
       }
 

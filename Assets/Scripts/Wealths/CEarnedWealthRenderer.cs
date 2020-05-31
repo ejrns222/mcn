@@ -16,9 +16,9 @@ public class CEarnedWealthRenderer : MonoBehaviour
     {
         _text = GetComponent<Text>();
         if(value >= 0)
-            _text.text = "+ " + UnitConversion.ConverseUnit(value).ConversedUnitToString();
+            _text.text = "+" + UnitConversion.ConverseUnit(value).ConversedUnitToString();
         else
-            _text.text = "- " + UnitConversion.ConverseUnit(value).ConversedUnitToString();
+            _text.text = "-" + UnitConversion.ConverseUnit(value).ConversedUnitToString();
         transform.localScale = new Vector3(0.1f,0.1f,0.1f);
     }
 

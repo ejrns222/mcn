@@ -62,11 +62,14 @@ public class CVideoEdit : MonoBehaviour
         Gold.Instance.Value += calculatedGold; 
         GameObject.Find("Gold").GetComponent<CWealthRenderer>().RenderEarnedWealth(calculatedGold);
 
-        int idx = Random.Range(0, Player.Instance.equippedStreamers.Count);
-        Player.Instance.equippedStreamers[idx].Subscribers++;
+        //int idx = Random.Range(0, Player.Instance.equippedStreamers.Count);
+        //Player.Instance.equippedStreamers[idx].Subscribers++;
 
         foreach (var v in Player.Instance.equippedStreamers)
         {
+            //
+            if(v == null)
+                continue;
             v.Subscribers += (uint)((float)v.IncreaseSubs * ((float)v.AdLevel / 2f));
         }
     }
