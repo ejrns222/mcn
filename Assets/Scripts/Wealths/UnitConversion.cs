@@ -17,14 +17,14 @@ namespace Wealths
     /// </summary>
     static class UnitConversion
     {
-        public static ConversedUnit ConverseUnit(BigInteger bigInteger)
+        public static ConversedUnit ConverseUnit(long Integer)
         {
             string[] charNums = {"", "A", "B", "C", "D", "E", "F", "G", "H"};
             ConversedUnit ret;
             ret.CharNum = charNums[0];
-            ret.RealNum = bigInteger.ToString();
+            ret.RealNum = Integer.ToString();
 
-            if (bigInteger >= 0)
+            if (Integer >= 0)
             {
                 if (ret.RealNum.Length < 4) return ret;
 
@@ -65,6 +65,8 @@ namespace Wealths
                         ret.RealNum = ret.RealNum.Substring(1, 2) + "." + ret.RealNum.Substring(3, 1);
                         break;
                 }
+
+                ret.RealNum = "-" + ret.RealNum;
             }
             return ret;
         }

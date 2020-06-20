@@ -29,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 790637602371247289}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -51,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92fa9a5ee6d06c34183d53a2c7022929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  value: 0
 --- !u!222 &790637602371247291
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -72,13 +73,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6dccef8019c2fde42aad80a75d8bcf07, type: 3}
+    m_Font: {fileID: 12800000, guid: f0363d53d4b7d6243ac5b4c145723461, type: 3}
     m_FontSize: 200
     m_FontStyle: 0
     m_BestFit: 0

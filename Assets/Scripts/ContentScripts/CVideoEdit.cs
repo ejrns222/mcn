@@ -1,26 +1,26 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
-using Characters;
 using UnityEngine;
 using UnityEngine.UI;
 using Util;
 using Wealths;
-using Random = UnityEngine.Random;
-using Vector3 = UnityEngine.Vector3;
 
 //골드 수급하는 컨텐츠
 public class CVideoEdit : MonoBehaviour
 {
     private Slider _slider;
     private uint _numEdit = 0;
-    private List<CEditButton> _editButtons = new List<CEditButton>();
-    public CEditButton editButtonPrefab;
+    private List<CEditSlot> _editSlots = new List<CEditSlot>();
+    
+    public CEditSlot contentSlotPrefab;
 
     void Awake()
     {
         _slider = GetComponentInChildren<Slider>();
+    }
+
+    private void Start()
+    {
         CTimeManager.Instance.onOneDayElapse += OnEditEnd;
         CTimeManager.Instance.onOneYearElapse += OnYearEnd;
         gameObject.SetActive(false);
@@ -30,21 +30,16 @@ public class CVideoEdit : MonoBehaviour
     {
         foreach (var v in Player.Instance.equippedStreamers)
         {
-            GameObject tmp;
-            tmp = Instantiate(editButtonPrefab.gameObject, GameObject.Find("EditButtons").transform);
-            CEditButton tmpEditButton = tmp.GetComponent<CEditButton>();
-            tmpEditButton.price = v.AdPrice;
-            tmpEditButton.buttonText = tmp.GetComponentInChildren<Text>();
-            tmpEditButton.buttonText.text = "이름 : " + v.Tag + 
-                                            "\n광고레벨 : " + v.AdLevel +
-                                            "\n광고가격 : " + v.AdPrice;
-            tmpEditButton.buttonText.transform.localPosition = new Vector3(360,-80,0);
-            tmpEditButton.buttonText.fontSize = 35;
-            tmpEditButton.streamer = v;
-            tmpEditButton.image = tmp.transform.GetChild(1).GetComponent<Image>();
-            tmpEditButton.image.sprite = Resources.Load<Sprite>("CharacterImage/" + v.Tag.ToString());
+            if(v == null)
+                continue;
+            
+            GameObject slot = Instantiate(contentSlotPrefab.gameObject, GameObject.Find("EditButtons").transform);
+            slot.GetComponent<CEditSlot>().streamer = v;
+            _editSlots.Add(slot.GetComponent<CEditSlot>());
+
         }
     }
+    
 
     void Update()
     {
@@ -58,41 +53,44 @@ public class CVideoEdit : MonoBehaviour
     void OnEditEnd()
     {
         _numEdit++;
-        BigInteger calculatedGold = CalculateGold();
-        Gold.Instance.Value += calculatedGold; 
-        GameObject.Find("Gold").GetComponent<CWealthRenderer>().RenderEarnedWealth(calculatedGold);
-
-        //int idx = Random.Range(0, Player.Instance.equippedStreamers.Count);
-        //Player.Instance.equippedStreamers[idx].Subscribers++;
+        long calculatedGold = CalculateGold();
+        Player.Instance.gold += calculatedGold; 
+        CWealthRenderer.RenderEarnedWealth(calculatedGold,EWealth.Gold);
 
         foreach (var v in Player.Instance.equippedStreamers)
         {
-            //
             if(v == null)
                 continue;
-            v.Subscribers += (uint)((float)v.IncreaseSubs * ((float)v.AdLevel / 2f));
+            if(v.Subscribers < v.Expectation)
+                v.Subscribers += (v.IncreasingSubs * ((uint) (v.AdLevel / 20f) + 1) * (v.AdLevel - 20 * (uint) (v.AdLevel / 20f) / 2));
         }
     }
 
+    //연봉
     void OnYearEnd()
     {
-        BigInteger salary = CalculateSalary();
-        Gold.Instance.Value += salary;
+        long salary = CalculateSalary();
+        Player.Instance.gold += salary;
     }
 
-    public BigInteger CalculateGold()
+    public long CalculateGold()
     {
-        BigInteger calculatedGold = Player.Instance.editPay;
-       
+        long calculatedGold = Player.Instance.EditPay;
         ///////////////
         //스킬 계산할 곳
         ///////////////
-
+        uint lv = CSelfCare.CareSkill.EditLevel;
+        double multiple = 1d + (10 * ((uint) (lv / 50f) + 1) * (lv - 50 * (uint) (lv / 50f) / 2)) / 100d; //10퍼씩 증가, 50레벨당 10퍼씩 추가 증가
+        calculatedGold = (long)Math.Round(multiple * calculatedGold);
+        
         return calculatedGold;
     }
 
-    public BigInteger CalculateSalary()
+    public long CalculateSalary()
     {
-        return Player.Instance.basicSalary + (Player.Instance.basicSalary / 100 * _numEdit);
+        long calculatedSalary = Player.Instance.BasicSalary;
+        uint lv = CSelfCare.CareSkill.ComputerLevel;
+        calculatedSalary= (long)Math.Round(calculatedSalary * (1d+ (lv * _numEdit) / 100d));
+        return calculatedSalary;
     }
 }

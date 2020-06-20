@@ -1,59 +1,65 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Wealths;
-using Vector3 = UnityEngine.Vector3;
 
-public enum EWealth
+namespace Wealths
 {
-    Mileage,
-    Jewel,
-    Money,
-}
-public class CWealthRenderer : MonoBehaviour
-{
-    public EWealth selectedWealth;
-    private Text _text;
-    private IWealth _wealth;
-    public GameObject earnedWealthPrefab;
-
-    private void Awake()
+    public enum EWealth
     {
-        //_text = gameObject.GetComponent<Text>();
-        _text = GetComponentInChildren<Text>();
-        
-        switch (selectedWealth)
-        {
-            case EWealth.Jewel:
-                _wealth = Jewel.Instance;
-                break;
-            case EWealth.Mileage:
-                _wealth = Mileage.Instance;
-                break;
-            case EWealth.Money:
-                _wealth = Gold.Instance;
-                break;
-        }
+        Mileage,Gold,Jewel   
     }
 
-    private void FixedUpdate()
+    /// <summary>
+    /// @brief : 재화와 재화의 증가값을 출력한다.
+    /// </summary>
+    public class CWealthRenderer : MonoBehaviour
     {
-        _text.text = _wealth.ConversedUnit();
-    }
+        private static GameObject _earnedWealthPrefab;
+
+        private static GameObject _mileage, _gold, _jewel;
     
-    public void RenderEarnedWealth(BigInteger value)
-    {
-        if (earnedWealthPrefab != null)
+        private void Awake()
         {
-            var temp = earnedWealthPrefab.GetComponent<CEarnedWealthRenderer>();
+           _earnedWealthPrefab = Resources.Load("UIPrefabs/EarnedWealth") as GameObject;
+            _mileage = transform.GetChild(0).gameObject;
+            _gold = transform.GetChild(1).gameObject;
+            _jewel = transform.GetChild(2).gameObject;
+        }
 
-            GameObject instanceObj = Instantiate(earnedWealthPrefab, transform, true);
-            instanceObj.GetComponent<CEarnedWealthRenderer>().value = value;
-            instanceObj.transform.localPosition = new Vector3(25f,20f,0);
+        private void FixedUpdate()
+        {
+            _mileage.transform.Find("Text").GetComponent<Text>().text =
+                UnitConversion.ConverseUnit(Player.Instance.mileage).ConversedUnitToString();
+            _gold.transform.Find("Text").GetComponent<Text>().text = 
+                UnitConversion.ConverseUnit(Player.Instance.gold).ConversedUnitToString();
+            _jewel.transform.Find("Text").GetComponent<Text>().text = 
+                UnitConversion.ConverseUnit(Player.Instance.jewel).ConversedUnitToString();
+        }
+    
+        //TODO : 열거형 없애기
+        public static void RenderEarnedWealth(long value, EWealth eWealth)
+        {
+            if (_earnedWealthPrefab != null)
+            {
+                var temp = _earnedWealthPrefab.GetComponent<CEarnedWealthRenderer>();
+                GameObject instanceObj = Instantiate(_earnedWealthPrefab);
+           
+                switch (eWealth)
+                {
+                    case EWealth.Mileage:
+                        instanceObj.transform.SetParent(_mileage.transform);
+                        break;
+                    case EWealth.Gold:
+                        instanceObj.transform.SetParent(_gold.transform);
+                        break;
+                    case EWealth.Jewel:
+                        instanceObj.transform.SetParent(_jewel.transform);
+                        break;
+                }
+
+                instanceObj.GetComponent<CEarnedWealthRenderer>().value = value;
+                instanceObj.transform.localPosition = new Vector3(25f, -20f, 0);
+            }
         }
     }
 }
