@@ -43,6 +43,7 @@
             <e p="CDictionarySlot.cs" t="Include" />
             <e p="CEditSlot.cs" t="Include" />
             <e p="CEquipSlot.cs" t="Include" />
+            <e p="CIntro.cs" t="Include" />
             <e p="ContentsManager.cs" t="Include" />
             <e p="CPopUpWindow.cs" t="Include" />
             <e p="CSummonWindow.cs" t="Include" />
