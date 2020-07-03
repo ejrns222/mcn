@@ -127,9 +127,8 @@ namespace UIScripts
                 case SlotState.Locked:
                     if (Player.Instance.mileage < price)
                     {
-                        var pw = Instantiate(Resources.Load("UIPrefabs/PopUpWindow") as GameObject,transform);
+                        var pw = Instantiate(Resources.Load("UIPrefabs/PopUpWindow") as GameObject,transform.root);
                         pw.transform.Find("Panel").Find("Content").GetComponent<Text>().text = "마일리지가 부족해..";
-                        pw.transform.SetParent(GameObject.Find("Tablet").transform);
                         break;
                     }
 

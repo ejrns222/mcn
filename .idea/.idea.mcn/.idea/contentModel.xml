@@ -4,9 +4,19 @@
     <e p="C:\Users\User\AppData\local\JetBrains\Rider2020.1\extResources" t="IncludeRecursive" />
     <e p="C:\Users\User\AppData\local\JetBrains\Rider2020.1\resharper-host\local\Transient\ReSharperHost\v201\SolutionCaches\_mcn.-104150886.00" t="ExcludeRecursive" />
     <e p="C:\Users\User\Desktop\P\Unity\project\mcn" t="IncludeRecursive">
+      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Plugins" t="Include">
+          <e p="Pixelplacement" t="Include">
+            <e p="iTween" t="Include">
+              <e p="iTween.cs" t="Include" />
+            </e>
+          </e>
+        </e>
         <e p="Scripts" t="Include">
+          <e p="CDialogManager.cs" t="Include" />
+          <e p="CDimensionDoor.cs" t="Include" />
           <e p="Characters" t="Include">
             <e p="CharacterInterface.cs" t="Include" />
             <e p="Streamers" t="Include">
@@ -25,12 +35,14 @@
             </e>
           </e>
           <e p="CInventory.cs" t="Include" />
+          <e p="CMovingManager.cs" t="Include" />
           <e p="ContentScripts" t="Include">
             <e p="CDictionary.cs" t="Include" />
             <e p="CDimensionResearch.cs" t="Include" />
             <e p="CEmployment.cs" t="Include" />
             <e p="CMonitoring.cs" t="Include" />
             <e p="CNotify.cs" t="Include" />
+            <e p="COfflineReward.cs" t="Include" />
             <e p="CRecruit.cs" t="Include" />
             <e p="CSelfCare.cs" t="Include" />
             <e p="CVideoEdit.cs" t="Include" />
@@ -40,6 +52,7 @@
             <e p="ButtonManager.cs" t="Include" />
             <e p="CCharacterChanger.cs" t="Include" />
             <e p="CCharacterChangeSlot.cs" t="Include" />
+            <e p="CDialog.cs" t="Include" />
             <e p="CDictionarySlot.cs" t="Include" />
             <e p="CEditSlot.cs" t="Include" />
             <e p="CEquipSlot.cs" t="Include" />

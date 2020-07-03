@@ -26,7 +26,7 @@ public class CIntro : MonoBehaviour
             var textColor = _startText.color;
             if (isFadeOut)
             {
-                textColor.a -= 0.1f;
+                textColor.a -= 0.02f;
                 if (textColor.a < 0.1f)
                 {
                     isFadeOut = false;
@@ -34,19 +34,20 @@ public class CIntro : MonoBehaviour
             }
             else
             {
-                textColor.a += 0.1f;
+                textColor.a += 0.02f;
                 if (textColor.a > 0.9f)
                 {
                     isFadeOut = true;
                 }
             }
             _startText.color = textColor;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.02f);
         }
     }
+    
     public void ChangeScene()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("TutorialScene");
     }
     
 

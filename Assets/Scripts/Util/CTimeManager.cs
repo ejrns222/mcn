@@ -67,6 +67,10 @@ namespace Util
 
         public Text clockText;
 
+        public long todayOfflineSalary;
+        public long todayOfflineMileage;
+        public long todayOfflineGold;
+
         void Awake()
         {
             if (!Instance)
@@ -87,6 +91,7 @@ namespace Util
 
         private void Update()
         {
+            //TODO : 델타타임은 Hour만 남기고 나머진 TotalPlayingHour로 계산하자. 뭔가 이상한듯 연봉을 날짜 중간에 막 받고 그럼
             _deltaTimeForHour += Time.deltaTime;
             _deltaTimeForDay += Time.deltaTime;
             _deltaTimeForYear += Time.deltaTime;
@@ -158,23 +163,23 @@ namespace Util
             long offlineMileage = GameObject.Find("Monitoring").GetComponent<CMonitoring>().CalculateMileage(false) *
                                   (int) ((deltaGameHour + _deltaTimeForHour) / _oneHour);
             _deltaTimeForHour = (deltaGameHour + _deltaTimeForHour) % _oneHour;
-            var finalOfflineMileage= offlineMileage / 10 * 3;
-            Player.Instance.mileage += finalOfflineMileage; //30%
-            Debug.Log("오프라인 보상 마일리지 : " + finalOfflineMileage);
+            todayOfflineMileage= offlineMileage / 10 * 3;
+            Player.Instance.mileage += todayOfflineMileage; //30%
+            Debug.Log("오프라인 보상 마일리지 : " + todayOfflineMileage);
         
             //편집 보상
             long offlineGold = GameObject.Find("VideoEdit").GetComponent<CVideoEdit>().CalculateGold() *
                                (int) ((deltaGameHour + _deltaTimeForDay) / _oneDay);
             _deltaTimeForDay = (deltaGameHour + _deltaTimeForDay) % _oneDay;
-            var finalOfflineGold= offlineGold / 10 * 3;
-            Player.Instance.gold += finalOfflineGold;
-            Debug.Log("오프라인 보상 편집수당 : " + finalOfflineGold);
+            todayOfflineGold= offlineGold / 10 * 3;
+            Player.Instance.gold += todayOfflineGold;
+            Debug.Log("오프라인 보상 편집수당 : " + todayOfflineGold);
         
             //월급
-            long salary = GameObject.Find("VideoEdit").GetComponent<CVideoEdit>().CalculateSalary() * (int)((deltaGameHour + _deltaTimeForYear) / _oneYear);
+            todayOfflineSalary = GameObject.Find("VideoEdit").GetComponent<CVideoEdit>().CalculateSalary() * (int)((deltaGameHour + _deltaTimeForYear) / _oneYear);
             _deltaTimeForYear = (deltaGameHour + _deltaTimeForYear) % _oneYear;
-            Player.Instance.gold += salary;
-            Debug.Log(("오프라인 연봉" + salary));
+            Player.Instance.gold += todayOfflineSalary;
+            Debug.Log(("오프라인 연봉" + todayOfflineSalary));
             
         }
 

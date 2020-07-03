@@ -27,7 +27,6 @@ public class CInventory : MonoBehaviour
         streamerList.Add(new CTestHyun());
         streamerList.Add(new CTestHun());
         streamerList.Add(new CGun());*/
-        
     }
 
     private void OnApplicationQuit()

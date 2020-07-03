@@ -62,7 +62,7 @@ public class CSaveLoadManager : MonoBehaviour
         var obj = Wrapping(array);
         string test = JsonUtility.ToJson(obj);
         string jsonData = Encrypt(JsonUtility.ToJson(obj));
-        Debug.Log("배열 저장 내용 " + JsonUtility.ToJson(obj));
+        //Debug.Log("배열 저장 내용 " + JsonUtility.ToJson(obj));
         FileStream fileStream = new FileStream(Application.dataPath + $"/{createPath}/{fileName}.json", FileMode.Create);
         byte[] data = Encoding.UTF8.GetBytes(jsonData);
         fileStream.Write(data, 0, data.Length);

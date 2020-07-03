@@ -41,7 +41,6 @@ public class Player : MonoBehaviour
          if (equippedStreamers[i].Tag == streamerName)
             return true;
       }
-
       return false;
    }
 
@@ -49,10 +48,10 @@ public class Player : MonoBehaviour
    {
       long[] wealths = new long[3]{mileage,gold,jewel};
       CSaveLoadManager.CreateJsonFileForArray(wealths,"SaveFiles","Wealths");
-
+      
       if (equippedStreamers.Length == 0)
       {
-         
+         return;
       }
       List<string> saveStreamer = new List<string>();
       foreach (var v in equippedStreamers)
