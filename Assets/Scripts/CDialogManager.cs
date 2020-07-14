@@ -13,8 +13,14 @@ public class CDialogManager : MonoBehaviour
     public string[] dialogs;
     private string _prevName;
     private int _currentDialogIdx = 0;
+    public bool isTutorial = false;
 
-    private void Awake()
+    public delegate void OnDialogEndHandler();
+
+    private OnDialogEndHandler onDialogEnd;
+    
+
+    private void Start()
     {
         _prevName = string.Empty;
         _dialogObjects = new List<GameObject>();
@@ -60,8 +66,10 @@ public class CDialogManager : MonoBehaviour
             _currentDialogIdx++;
             if (_currentDialogIdx >= _dialogObjects.Count)
             {
+                onDialogEnd?.Invoke();
                 Destroy(gameObject);
-                SceneManager.LoadScene("GameScene");//임시
+                if(isTutorial)
+                    SceneManager.LoadScene("GameScene");
                 return;
             }
         }
@@ -70,7 +78,26 @@ public class CDialogManager : MonoBehaviour
         {
             _dialogObjects[_currentDialogIdx].SetActive(true);
         }
-        
-        
+    }
+
+    /// <summary>
+    /// 문장은 "스트리머이름(Me):대화내용" 이렇게 구성
+    /// </summary>
+    /// <param name="strings"></param>
+    public static CDialogManager CreateDialog(params string[] strings)
+    {
+        CDialogManager dialog = new GameObject().AddComponent<CDialogManager>();
+        dialog.dialog = Resources.Load("UIPrefabs/Dialog") as GameObject;
+        dialog.myDialog = Resources.Load("UIPrefabs/MyDialog") as GameObject;
+        dialog.dialogs = strings;
+
+        return dialog;
+    }
+
+    public void AddOnDialogEnd(OnDialogEndHandler dialogEndHandler)
+    {
+        if(onDialogEnd == null)
+            onDialogEnd = dialogEndHandler;
+        onDialogEnd += dialogEndHandler;
     }
 }

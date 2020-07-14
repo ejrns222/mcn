@@ -5,11 +5,12 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
-
+using Util;
 
 
 public class CSaveLoadManager : MonoBehaviour
 {
+    public static CSaveLoadManager Instance = null;
     private class Wrapper<T>
     {
         public T[] Items;
@@ -19,9 +20,19 @@ public class CSaveLoadManager : MonoBehaviour
 
     private void Awake()
     {
+        if (!Instance)
+            Instance = this;
+        else if(Instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
     private void OnApplicationQuit()
+    {
+        ClassesSave();
+    }
+
+    public static void ClassesSave()
     {
         CDictionary.Save();
         CSelfCare.Save();
@@ -29,6 +40,8 @@ public class CSaveLoadManager : MonoBehaviour
         Player.Instance.Save();
         CRecruit.Save();
         CMonitoring.Save();
+        CTimeManager.SaveGameTime();
+        CInventory.Save();
     }
 
     private static Wrapper<T> Wrapping<T>(T[] array)

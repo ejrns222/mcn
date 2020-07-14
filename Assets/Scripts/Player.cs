@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Characters;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class Player : MonoBehaviour
 {
    public static Player Instance = null;
    public StreamerBase[] equippedStreamers = new StreamerBase[8];
+   public CInventory inventory;
    
    /////////////////////플레이어 스텟///////////////////////////
    [SerializeField] public uint maxNumStreamers =0;
@@ -23,6 +25,7 @@ public class Player : MonoBehaviour
    
    private void Awake()
    {
+      Screen.SetResolution(720,1280,true);
       if (!Instance)
          Instance = this;
       else if(Instance != this)
@@ -30,6 +33,8 @@ public class Player : MonoBehaviour
       DontDestroyOnLoad(gameObject);
 
       Load();
+      
+      inventory = new CInventory();
    }
 
    public bool FindStreamer(EStreamer streamerName)
@@ -83,6 +88,45 @@ public class Player : MonoBehaviour
       for (int i = 0; i < streamers.Length; i++)
          equippedStreamers[i] = StreamerBaseForJson.StringToStreamer(streamers[i]);
 
+   }
+}
+
+public class CInventory
+{
+   public static List<StreamerBase> streamerList = new List<StreamerBase>();
+
+   public CInventory()
+   {
+      Load();
+   }
+
+   public static void Save()
+   {
+      List<string> saveStreamer = new List<string>();
+      foreach (var v in streamerList)
+      {
+         saveStreamer.Add(StreamerBaseForJson.StreamerToString(v));
+      }
+      CSaveLoadManager.CreateJsonFileForArray(saveStreamer.ToArray(),"SaveFiles","Inventory");
+   }
+
+   private void Load()
+   {
+      var streamers = CSaveLoadManager.LoadJsonFileToArray<string>("SaveFiles","Inventory");
+      if(streamers == null)
+         return;
+      
+      streamerList.Clear();
+      foreach (var v in streamers)
+      {
+         streamerList.Add(StreamerBaseForJson.StringToStreamer(v));
+      }
+   }
+
+   public static int FindStreamerIndex(StreamerBase streamer)
+   {
+      int idx = streamerList.IndexOf(streamer);
+      return idx;
    }
 }
 

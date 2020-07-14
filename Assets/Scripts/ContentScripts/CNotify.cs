@@ -91,7 +91,7 @@ public class CNotify : MonoBehaviour
                 
             if (pw != null)
             {
-                pw.GetComponent<CPopUpWindow>().SetText("돈이 부족하군..");
+                pw.GetComponent<CPopUpWindow>().SetText("Error:\n골드 부족");
             }
             return;
         }
@@ -115,7 +115,7 @@ public class CNotify : MonoBehaviour
                 
             if (pw != null)
             {
-                pw.GetComponent<CPopUpWindow>().SetText("차원석이 부족하군..");
+                pw.GetComponent<CPopUpWindow>().SetText("Error:\n차원석 부족");
             }
             return;
         }
@@ -140,7 +140,7 @@ public class CNotify : MonoBehaviour
                 
             if (pw != null)
             {
-                pw.GetComponent<CPopUpWindow>().SetText("마일리지가 부족하군..");
+                pw.GetComponent<CPopUpWindow>().SetText("Error:\n마일리지 부족");
             }
             return;
         }

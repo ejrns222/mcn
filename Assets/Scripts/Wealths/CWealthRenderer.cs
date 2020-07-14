@@ -24,6 +24,7 @@ namespace Wealths
             _mileage = transform.GetChild(0).gameObject;
             _gold = transform.GetChild(1).gameObject;
             _jewel = transform.GetChild(2).gameObject;
+            
         }
 
         private void FixedUpdate()
@@ -36,7 +37,6 @@ namespace Wealths
                 UnitConversion.ConverseUnit(Player.Instance.jewel).ConversedUnitToString();
         }
     
-        //TODO : 열거형 없애기
         public static void RenderEarnedWealth(long value, EWealth eWealth)
         {
             if (_earnedWealthPrefab != null)

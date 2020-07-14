@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: f0a29101e42cf3a4b9e91e72acd7783a
+  - enabled: 1
+    path: Assets/Scenes/DimensionDoorScene.unity
+    guid: c4b96bb30229e074cb1d493d97468ff1
   m_configObjects: {}

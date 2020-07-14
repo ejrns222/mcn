@@ -14,8 +14,10 @@ public class CCharacterChanger : MonoBehaviour
     private void OnEnable()
     {
         _changeSlotList.Clear();
-        foreach (var v in CInventory.Instance.streamerList)
+        foreach (var v in CInventory.streamerList)
         {
+            if(v == null)
+                continue;
             GameObject slot;
             slot = Instantiate(changeSlotPrefab.gameObject, changeSlots.transform);
             slot.GetComponent<CCharacterChangeSlot>().characterChanger = this;
@@ -33,21 +35,21 @@ public class CCharacterChanger : MonoBehaviour
     /// <param name="slot"></param>  선택한 슬롯
     public void CharacterChange(CCharacterChangeSlot slot)
     {
-        int invenIdx = CInventory.Instance.streamerList.IndexOf(slot.streamer);
+        int invenIdx = CInventory.streamerList.IndexOf(slot.streamer);
         int equipIdx = Array.FindIndex(Player.Instance.equippedStreamers, i => i == selectedEquipSlot.streamer);
 
         //if (equipIdx == -1)
         
         if(selectedEquipSlot.streamer == null)//장착이 안되어 있을 때
         {
-            Player.Instance.equippedStreamers[selectedEquipSlot.index] = CInventory.Instance.streamerList[invenIdx];
-            CInventory.Instance.streamerList.RemoveAt(invenIdx);
+            Player.Instance.equippedStreamers[selectedEquipSlot.index] = CInventory.streamerList[invenIdx];
+            CInventory.streamerList.RemoveAt(invenIdx);
             selectedEquipSlot.ChangeState(SlotState.OpenEquipped);
         }
         else//이미 장착이 되어 있을 때
         {
-            var tmp = CInventory.Instance.streamerList[invenIdx];
-            CInventory.Instance.streamerList[invenIdx] = Player.Instance.equippedStreamers[equipIdx];
+            var tmp = CInventory.streamerList[invenIdx];
+            CInventory.streamerList[invenIdx] = Player.Instance.equippedStreamers[equipIdx];
             Player.Instance.equippedStreamers[equipIdx] = tmp;
             selectedEquipSlot.ChangeState(SlotState.OpenEquipped);
         }
@@ -68,7 +70,7 @@ public class CCharacterChanger : MonoBehaviour
             return;
         }
 
-        CInventory.Instance.streamerList.Add(Player.Instance.equippedStreamers[equipIdx]);
+        CInventory.streamerList.Add(Player.Instance.equippedStreamers[equipIdx]);
         Player.Instance.equippedStreamers[equipIdx] = null;
         selectedEquipSlot.ChangeState(SlotState.OpenEmpty);
         

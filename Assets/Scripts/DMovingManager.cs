@@ -1,32 +1,28 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class CMovingManager : MonoBehaviour
+public class DMovingManager : MonoBehaviour
 {
     [SerializeField] private GameObject tablet = null;
-    [SerializeField] private GameObject room = null;
     [SerializeField] private GameObject backGround = null;
     [SerializeField] private GameObject mask = null;
 
     private void Awake()
     {
         Screen.SetResolution(720,1280,true);
-        iTween.MoveTo(tablet, iTween.Hash("y", -190,"isLocal",true, "easeType", "easeOutExpo","delay",2f,"Time",1.5f));
-        iTween.MoveTo(room, iTween.Hash("y", 0, "easeType", "easeOutSine","Time",1f,"delay",0.5f));
-        iTween.MoveTo(backGround, iTween.Hash("y", 7, "easeType", "easeOutSine","Time",1f,"delay",0.5f));
+        iTween.MoveTo(tablet, iTween.Hash("y", -190,"isLocal",true, "easeType", "easeOutExpo","delay",2.5f,"Time",1.5f));
+        iTween.MoveTo(backGround, iTween.Hash("y", 1.77f, "easeType", "easeOutSine","Time",2.5f,"delay",0.5f));
         StartCoroutine(FadeInOut(true,0.5f));
     }
 
-    public void ExitOffice()
+    public void ExitDimensionDoor()
     {
         iTween.MoveTo(tablet, iTween.Hash("y", -1064,"isLocal",true, "easeType", "easeOutExpo","Time",1.5f));
-        iTween.MoveTo(room, iTween.Hash("y", -245,"isLocal",true, "easeType", "easeOutSine","Time",1f,"delay",1));
-        iTween.MoveTo(backGround, iTween.Hash("y", 5, "easeType", "easeOutSine","Time",1f,"delay",1));
-        StartCoroutine(FadeInOut(false,0.5f,"DimensionDoorScene"));
+        iTween.MoveTo(backGround, iTween.Hash("y", -1.77f, "easeType", "easeOutSine","Time",2.5f,"delay",1));
+        StartCoroutine(FadeInOut(false,0.5f,"GameScene"));
         CSaveLoadManager.ClassesSave();
     }
 

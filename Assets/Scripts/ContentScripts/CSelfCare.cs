@@ -66,7 +66,6 @@ public class CSelfCare : MonoBehaviour
         _buttons[4].transform.parent.Find("Value").GetComponent<Text>().text = CareSkill.BroadCastLevel.ToString();
         
 
-        //TODO:레벨 맥스 되면 버튼 어둡게 + 텍스트 레벨맥스로, 가격과 가격 이미지 지우기
         if (CareSkill.SocialLevel >= 100)
         {
             _buttons[2].transform.Find("Text").GetComponent<Text>().text = "Lv.Max";
@@ -75,14 +74,13 @@ public class CSelfCare : MonoBehaviour
         }
     }
 
-    //TODO : 나중에 UI생성하는 것들은 한곳에 static함수로 모으면 좋을 것 같다.
     private void NotEnoughGold()
     {
         var pw = Instantiate(Resources.Load("UIPrefabs/PopUpWindow") as GameObject,transform.root);
                 
         if (pw != null)
         {
-            pw.GetComponent<CPopUpWindow>().SetText("골드가 부족하군..");
+            pw.GetComponent<CPopUpWindow>().SetText("Error:\n골드 부족");
         }
     }
 

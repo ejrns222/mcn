@@ -9,11 +9,18 @@ public class COfflineReward : MonoBehaviour
 {
     private Text _touch;
     private Text _reward;
+    private static bool _isOnce = false; 
 
     private void Awake()
     {
+        if (_isOnce)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
         _touch = transform.Find("Mail").Find("Panel").Find("Touch").GetComponent<Text>();
         _reward = transform.Find("MailBox").Find("Panel").Find("Reward").GetComponent<Text>();
+        _isOnce = true;
     }
 
     private void Start()

@@ -50,6 +50,6 @@ public class CEditSlot : MonoBehaviour
         
       var pw = Instantiate(Resources.Load("UIPrefabs/PopUpWindow") as GameObject,transform.root);
       if (pw != null)
-         pw.GetComponent<CPopUpWindow>().SetText("골드가 부족하군..");
+         pw.GetComponent<CPopUpWindow>().SetText("Error:\n골드 부족");
    }
 }

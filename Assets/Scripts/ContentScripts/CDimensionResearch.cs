@@ -58,7 +58,7 @@ public class CDimensionResearch : MonoBehaviour
                 
         if (pw != null)
         {
-            pw.GetComponent<CPopUpWindow>().SetText("차원보석이 부족하군..");
+            pw.GetComponent<CPopUpWindow>().SetText("Error:\n차원석 부족");
         }
     }
     

@@ -427,6 +427,7 @@ MonoBehaviour:
   - "Gun:\u3147\uB77C\uB2C8\uC5B4\uB9AC\u314F\u3147\uB110555"
   - "Me:\uC870\uC6A9\uD788\uD574"
   - "Me:\uB05D\uC774\uB2E4"
+  isTutorial: 1
 --- !u!1 &1220636718
 GameObject:
   m_ObjectHideFlags: 0

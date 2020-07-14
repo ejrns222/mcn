@@ -114,7 +114,6 @@ namespace UIScripts
             }
         }
 
-        //TODO: 유틸에 팝업윈도우나 대화창 등을 띄우는 스태틱클래스를 하나 만들자.
         private void ButtonClick()
         {
             switch (slotState)
@@ -128,7 +127,7 @@ namespace UIScripts
                     if (Player.Instance.mileage < price)
                     {
                         var pw = Instantiate(Resources.Load("UIPrefabs/PopUpWindow") as GameObject,transform.root);
-                        pw.transform.Find("Panel").Find("Content").GetComponent<Text>().text = "마일리지가 부족해..";
+                        pw.transform.Find("Panel").Find("Content").GetComponent<Text>().text = "Error:\n마일리지 부족";
                         break;
                     }
 

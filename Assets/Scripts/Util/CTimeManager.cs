@@ -46,10 +46,10 @@ namespace Util
         private const float _oneYear = 8640f;
 
 
-        private float _deltaTimeForHour;//저장
-        private float _deltaTimeForDay;//저장
-        private float _deltaTimeForYear;//저장
-        private ulong _totalPlayingGameHour;//저장, 첫게임 시작부터 계속 흐른다. TODO : 처음에 플레이어의 이름을 받아서 이름이 철수면 철수력 몇년몇월몇일 이렇게 하면 될듯
+        private static float _deltaTimeForHour;//저장
+        private static float _deltaTimeForDay;//저장
+        private static float _deltaTimeForYear;//저장
+        private static ulong _totalPlayingGameHour;//저장, 첫게임 시작부터 계속 흐른다.
 
         public float DeltaTimeForHour => _deltaTimeForHour;
         public float DeltaTimeForDay => _deltaTimeForDay;
@@ -125,12 +125,6 @@ namespace Util
             if(_deltaTimeForHour < 0)
                 Debug.Log("Time Bug");
         }
-
-        private void OnApplicationQuit()
-        {
-            LastRealTime = DateTime.Now;
-            SaveGameTime();
-        }
     
         /// <summary>
         /// @brief : 오프라인 보상
@@ -183,11 +177,11 @@ namespace Util
             
         }
 
-        private void SaveGameTime()
+        public static void SaveGameTime()
         {
             SavedTime times = new SavedTime
             {
-                LastTime = JsonUtility.ToJson((JsonDateTime)LastRealTime),
+                LastTime = JsonUtility.ToJson((JsonDateTime)DateTime.Now),
                 DeltaTimeForDay = _deltaTimeForDay,
                 DeltaTimeForHour = _deltaTimeForHour,
                 DeltaTimeForYear = _deltaTimeForYear,

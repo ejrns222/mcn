@@ -54,7 +54,7 @@ public class CRecruit : MonoBehaviour
       long price = (long) (NewRecruitPrice * Math.Pow(1.3d, _numNewRecruit));
       if (Player.Instance.mileage < price)
       {
-         Instantiate(popupWindowPrefab, transform.root).GetComponent<CPopUpWindow>().SetText("마일리지가 부족하군..");
+         Instantiate(popupWindowPrefab, transform.root).GetComponent<CPopUpWindow>().SetText("Error:\n마일리지 부족");
          return;
       }
       else
@@ -78,7 +78,7 @@ public class CRecruit : MonoBehaviour
       long price = (long) (ExpertRecruitPrice * Math.Pow(1.3d, _numExpertRecruit));
       if (Player.Instance.jewel < price)
       {
-         Instantiate(popupWindowPrefab, transform.root).GetComponent<CPopUpWindow>().SetText("차원석이 부족하군..");
+         Instantiate(popupWindowPrefab, transform.root).GetComponent<CPopUpWindow>().SetText("Error:\n차원석 부족");
          return;
       }
       else
@@ -96,7 +96,10 @@ public class CRecruit : MonoBehaviour
    public void FreeSummon()
    {
       if (CNotify.MembershipLv - _numFreeRecruit == 0)
+      {
+         Instantiate(popupWindowPrefab, transform.root).GetComponent<CPopUpWindow>().SetText("Error:\n무료횟수 없음");
          return;
+      }
       //TODO:광고출력
       var gatchaResult = StreamerGatcha(_probGeneralSummon);
       Payment(gatchaResult, EWealth.Mileage, 0,false);
@@ -231,7 +234,7 @@ public class CRecruit : MonoBehaviour
          clone.AdLevel = 3;
       }
 
-      CInventory.Instance.streamerList.Add(clone);
+      CInventory.streamerList.Add(clone);
          
       switch (eWealth)
       {
