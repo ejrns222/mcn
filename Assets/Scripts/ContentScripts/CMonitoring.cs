@@ -70,17 +70,6 @@ public class CMonitoring : MonoBehaviour
             
             calculatedMileage += (uint)((v.Subscribers/10) * LevelCorrection(v.Rank));
         }
-
-        long skilledMileage = 0;
-        foreach (var v in Player.Instance.equippedStreamers)
-        {
-            //
-            if(v == null)
-                continue;
-            skilledMileage += v.Skill(calculatedMileage);
-        }
-        calculatedMileage += skilledMileage;
-
         
         //크리티컬 계산
         if (calculatedMileage > 0 && isOnline)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Characters;
 using UnityEngine;
@@ -11,8 +12,10 @@ using UnityEngine.UI;
 public class CDictionary : MonoBehaviour
 {
     [SerializeField] private GameObject dictionarySlotPrefab = null;
+    [SerializeField] private GameObject instructorSLotPrefab = null;
     
     public static Dictionary<StreamerBase, bool> AllStreamers;
+    public static Dictionary<InstructorBase,bool> Instructors;
     
     //가차용으로 미리 랭크별 분류해놓은 리스트
     public static List<StreamerBase> StreamersA;
@@ -47,6 +50,13 @@ public class CDictionary : MonoBehaviour
         
         //도감 내용
         {
+            foreach (var v in Instructors.Keys)
+            {
+                var rankButtonTransform = transform.Find("Content").Find("RankButtons");
+                var obj = Instantiate(instructorSLotPrefab, rankButtonTransform.Find("Instructor").Find("Scroll View").Find("Viewport").Find("Content"));
+                obj.GetComponent<CInstructorSlot>().Instructor = v;
+            }
+            
             foreach (var v in StreamersA)
             {
                 var rankButtonTransform = transform.Find("Content").Find("RankButtons");
@@ -102,6 +112,7 @@ public class CDictionary : MonoBehaviour
         StreamersD = new List<StreamerBase>();
         StreamersE = new List<StreamerBase>();
         StreamersF = new List<StreamerBase>();
+        Instructors = new Dictionary<InstructorBase, bool>();
 
         
         foreach (Type t  in Assembly.GetExecutingAssembly().GetTypes())
@@ -133,6 +144,12 @@ public class CDictionary : MonoBehaviour
                         break;
                 }
             }
+            else if (t.Namespace == "Characters.Instructors")
+            {
+                InstructorBase temp = (InstructorBase) Activator.CreateInstance(t);
+                Instructors.Add(temp,false);
+            }
+            
         }
         Load();
         
@@ -162,8 +179,17 @@ public class CDictionary : MonoBehaviour
                 savedName.Add(v.Key.Tag.ToString());
             }
         }
-
         CSaveLoadManager.CreateJsonFileForArray(savedName.ToArray(),"SaveFiles","DuplicatedCharacter");
+        
+        List<string> savedInstructor = new List<string>();
+        foreach (var v in Instructors)
+        {
+            if (v.Value == true)
+            {
+                savedInstructor.Add(v.Key.Tag.ToString());
+            }
+        }
+        CSaveLoadManager.CreateJsonFileForArray(savedInstructor.ToArray(),"SaveFiles","DuplicatedInstructor");
     }
     
     //초기화한 스트리머 리스트의 중복여부를 불러온 리스트에 있는 스트리머의 _isDuplicated로 교체한다.
@@ -184,5 +210,22 @@ public class CDictionary : MonoBehaviour
                 }
             }
         }
+
+        var loadedInstructor = CSaveLoadManager.LoadJsonFileToArray<string>("SaveFiles", "DuplicatedInstructor");
+        if (loadedInstructor == null)
+            return;
+
+        foreach (var v in loadedInstructor)
+        {
+            foreach (var w in Instructors.Keys)
+            {
+                if (v == w.Tag.ToString())
+                {
+                    Instructors[w] = true;
+                    break;
+                }
+            }
+        }
+        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using Characters;
 using UnityEngine;
@@ -35,6 +36,13 @@ public class Player : MonoBehaviour
       Load();
       
       inventory = new CInventory();
+      
+      var isTutorialEnd =CSaveLoadManager.LoadJsonFileToArray<bool>("SaveFiles", "TutorialEnd2");
+      if (isTutorialEnd == null)
+      {
+         mileage = 40000;
+         jewel = 1500;
+      }
    }
 
    public bool FindStreamer(EStreamer streamerName)
@@ -75,12 +83,6 @@ public class Player : MonoBehaviour
          gold = wealths[1];
          jewel = wealths[2];
       }
-
-      ////////TEST////////
-      mileage = 10000000000;
-      gold = 200000000000000;
-      jewel = 1000;
-      /////////////////////
       
       var streamers = CSaveLoadManager.LoadJsonFileToArray<string>("SaveFiles","EquippedStreamer");
       if(streamers == null)
@@ -94,6 +96,7 @@ public class Player : MonoBehaviour
 public class CInventory
 {
    public static List<StreamerBase> streamerList = new List<StreamerBase>();
+   public static List<InstructorBase> instructorList = new List<InstructorBase>();
 
    public CInventory()
    {
@@ -103,23 +106,42 @@ public class CInventory
    public static void Save()
    {
       List<string> saveStreamer = new List<string>();
+      List<string> saveInstructor = new List<string>();
       foreach (var v in streamerList)
       {
          saveStreamer.Add(StreamerBaseForJson.StreamerToString(v));
       }
+
+      foreach (var v in instructorList)
+      {
+         saveInstructor.Add((v.Tag.ToString()));
+      }
       CSaveLoadManager.CreateJsonFileForArray(saveStreamer.ToArray(),"SaveFiles","Inventory");
+      CSaveLoadManager.CreateJsonFileForArray(saveInstructor.ToArray(),"SaveFiles","InventoryInstructor");
    }
 
    private void Load()
    {
       var streamers = CSaveLoadManager.LoadJsonFileToArray<string>("SaveFiles","Inventory");
+      var instroctors = CSaveLoadManager.LoadJsonFileToArray<string>("SaveFiles","InventoryInstructor");
       if(streamers == null)
+         return;
+      if (instroctors == null)
          return;
       
       streamerList.Clear();
+      instructorList.Clear();
+      
       foreach (var v in streamers)
       {
          streamerList.Add(StreamerBaseForJson.StringToStreamer(v));
+      }
+
+      foreach (var v in instroctors)
+      {
+         Type t = Assembly.GetExecutingAssembly().GetType("Characters.Instroctors.C" + v);
+         InstructorBase instructor = (InstructorBase) Activator.CreateInstance(t);
+         instructorList.Add(instructor);
       }
    }
 

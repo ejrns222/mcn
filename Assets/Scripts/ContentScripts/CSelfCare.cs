@@ -5,6 +5,7 @@ using Wealths;
 
 public class CSelfCare : MonoBehaviour
 {
+    private float _buttonDownTime = 0;
     public struct Skill
     {
         public uint EditLevel ;
@@ -16,6 +17,12 @@ public class CSelfCare : MonoBehaviour
     
     private Button[] _buttons;
     public static Skill CareSkill;
+
+    private bool _isEditButtonDown;
+    private bool _isBotButtonDown;
+    private bool _isSocialButtonDown;
+    private bool _isComButtonDown;
+    private bool _isBroadButtonDown;
     
     
     private void Awake()
@@ -23,11 +30,11 @@ public class CSelfCare : MonoBehaviour
         _buttons = GetComponentsInChildren<Button>();
 
         {
-            _buttons[0].onClick.AddListener(VideoEditStudy);
+            /*_buttons[0].onClick.AddListener(VideoEditStudy);
             _buttons[1].onClick.AddListener(BotUpgrade);
             _buttons[2].onClick.AddListener(SocialLevelUp);
             _buttons[3].onClick.AddListener(ComUpgrade);
-            _buttons[4].onClick.AddListener(BroadCastUp);
+            _buttons[4].onClick.AddListener(BroadCastUp);*/
         }
 
         Load();
@@ -38,6 +45,45 @@ public class CSelfCare : MonoBehaviour
     private void OnEnable()
     {
         Init();
+    }
+
+    private void Update()
+    {
+        if (_isBotButtonDown)
+        {
+            if (OnButtonTouch())
+            {
+                BotUpgrade();
+            }
+        }
+        else if (_isBroadButtonDown)
+        {
+            if (OnButtonTouch())
+            {
+                BroadCastUp();
+            }
+        }
+        else if (_isComButtonDown)
+        {
+            if (OnButtonTouch())
+            {
+                ComUpgrade();
+            }
+        }
+        else if (_isEditButtonDown)
+        {
+            if (OnButtonTouch())
+            {
+                VideoEditStudy();
+            }
+        }
+        else if (_isSocialButtonDown)
+        {
+            if (OnButtonTouch())
+            {
+                SocialLevelUp();
+            }
+        }
     }
 
     private void Init()
@@ -52,7 +98,7 @@ public class CSelfCare : MonoBehaviour
         _buttons[1].transform.Find("priceText").GetComponent<Text>().text = UnitConversion.ConverseUnit((long)(10000 * Math.Pow(1.12f,(int)CareSkill.BotLevel))).ConversedUnitToString();
         _buttons[2].transform.Find("priceText").GetComponent<Text>().text = UnitConversion.ConverseUnit((long)(10000 * Math.Pow(1.12f,(int)CareSkill.SocialLevel))).ConversedUnitToString();
         _buttons[3].transform.Find("priceText").GetComponent<Text>().text = UnitConversion.ConverseUnit((long)(100000 * Math.Pow(1.12f,(int)CareSkill.ComputerLevel))).ConversedUnitToString();
-        _buttons[4].transform.Find("priceText").GetComponent<Text>().text = UnitConversion.ConverseUnit((long)(500000 * Math.Pow(10.5f,(int)CareSkill.BroadCastLevel))).ConversedUnitToString();
+        _buttons[4].transform.Find("priceText").GetComponent<Text>().text = UnitConversion.ConverseUnit((long)(500000 * Math.Pow(7.5f,(int)CareSkill.BroadCastLevel))).ConversedUnitToString();
 
         _buttons[0].transform.parent.Find("Value").GetComponent<Text>().text =
             "+" + (10 * ((uint) (CareSkill.EditLevel / 50f) + 1) *
@@ -80,15 +126,18 @@ public class CSelfCare : MonoBehaviour
                 
         if (pw != null)
         {
-            pw.GetComponent<CPopUpWindow>().SetText("Error:\n골드 부족");
+            pw.GetComponent<CPopUpWindow>().SetText("Error:\n현금 잔액 부족");
         }
+
+        _buttonDownTime = -1000;
     }
 
     /// <summary>
     /// @brief : 영상 편집 수당 증가
     /// </summary>
-    private void VideoEditStudy()
+    public void VideoEditStudy()
     {
+        _isEditButtonDown = true;
         long price = (long)(10000 * Math.Pow(1.12f,(int)CareSkill.EditLevel));
         if (Player.Instance.gold < price)
         {
@@ -100,9 +149,15 @@ public class CSelfCare : MonoBehaviour
         CareSkill.EditLevel++;
         Init();
     }
-
-    private void ComUpgrade()
+    public void VideoEditButtonUp()
     {
+        _isEditButtonDown = false;
+        _buttonDownTime = 0;
+    }
+
+    public void ComUpgrade()
+    {
+        _isComButtonDown = true;
         long price = (long)(100000 * Math.Pow(1.12f,(int)CareSkill.ComputerLevel));
         if (Player.Instance.gold < price)
         {
@@ -114,9 +169,15 @@ public class CSelfCare : MonoBehaviour
         CareSkill.ComputerLevel++;
         Init();
     }
-    
-    private void BotUpgrade()
+    public void ComUpgradeButtonUp()
     {
+        _isComButtonDown = false;
+        _buttonDownTime = 0;
+    }
+
+    public void BotUpgrade()
+    {
+        _isBotButtonDown = true;
         long price = (long)(10000 * Math.Pow(1.12f,(int)CareSkill.BotLevel));
         if (Player.Instance.gold < price)
         {
@@ -128,9 +189,15 @@ public class CSelfCare : MonoBehaviour
         CareSkill.BotLevel++;
         Init();
     }
-
-    private void SocialLevelUp()
+    public void BotUpgradeButtonUp()
     {
+        _isBotButtonDown = false;
+        _buttonDownTime = 0;
+    }
+
+    public void SocialLevelUp()
+    {
+        _isSocialButtonDown = true;
         if (CareSkill.SocialLevel >= 100)
         {
             Init();
@@ -147,10 +214,16 @@ public class CSelfCare : MonoBehaviour
         CareSkill.SocialLevel++;
         Init();
     }
-
-    private void BroadCastUp()
+    public void SocialButtonUp()
     {
-        long price = (long)(500000 * Math.Pow(1.5f,(int)CareSkill.BroadCastLevel));
+        _isSocialButtonDown = false;
+        _buttonDownTime = 0;
+    }
+
+    public void BroadCastUp()
+    {
+        _isBroadButtonDown = true;
+        long price = (long)(500000 * Math.Pow(7.5f,(int)CareSkill.BroadCastLevel));
         if (Player.Instance.gold < price)
         {
             NotEnoughGold();
@@ -160,6 +233,11 @@ public class CSelfCare : MonoBehaviour
         Player.Instance.gold -= price;
         CareSkill.BroadCastLevel++;
         Init();
+    }
+    public void BroadCastButtonUp()
+    {
+        _isBroadButtonDown = false;
+        _buttonDownTime = 0;
     }
 
     public static void Save()
@@ -185,5 +263,13 @@ public class CSelfCare : MonoBehaviour
         CareSkill.SocialLevel = skillArray[2];
         CareSkill.ComputerLevel = skillArray[3];
         CareSkill.BroadCastLevel = skillArray[4];
+    }
+
+    private bool OnButtonTouch()
+    {
+        _buttonDownTime += Time.deltaTime;
+        if (_buttonDownTime > 0.5f)
+            return true;
+        return false;
     }
 }

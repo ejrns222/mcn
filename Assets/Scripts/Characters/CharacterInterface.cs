@@ -11,6 +11,17 @@ namespace Characters
         TestHyun,
         TestTaek,
         Gun,
+        Sajang,
+        Taegong,
+    }
+
+    public enum EInstructor
+    {
+        Daedo,
+        SsuckSso,
+        Gangzi,
+        KimBlue,
+        Ryueumi,
     }
 
     public enum ERank
@@ -19,11 +30,14 @@ namespace Characters
     }
 
 
-    public abstract class StreamerBase 
+    public class StreamerBase 
     {
-        public abstract long Skill(long calculatedValue);
-
-        public  EStreamer Tag { get; protected set; }//태그
+        public string Info()
+        {
+            return $"이름 : {Name}\n랭크 : {Rank.ToString()}\n광고 횟수 : {AdLevel}\n구독자 수 : {Subscribers}\n졸업요건 : {Expectation}";
+        }
+        public EStreamer Tag { get; protected set; }//태그
+        public string Name;
         public ERank Rank { get; protected set; }//랭크
         public uint IncreasingSubs { get; protected set; }//구독자 증가 폭
         public uint Subscribers { get; set; }//현재 구독자 수
@@ -55,5 +69,31 @@ namespace Characters
             return streamer;
         }
     }
-    
+
+    public abstract class InstructorBase
+    {
+        public abstract long Skill(long calculatedValue);
+        public string SkillName { get; protected set; }
+        public string SkillDesc { get; protected set; }
+        public EInstructor Tag { get; protected set; }
+        public string Desc { get; protected set; }
+        public string Name { get; protected set; }
+    }
+
+    public class CharacterUtil
+    {
+        public static string FindName(string nameTag)
+        {
+            EStreamer tag = (EStreamer) Enum.Parse(typeof(EStreamer), nameTag);
+            foreach (var v in CDictionary.AllStreamers.Keys)
+            {
+                if (v.Tag == tag)
+                {
+                    return v.Name;
+                }
+            }
+
+            return "";
+        }
+    }
 }

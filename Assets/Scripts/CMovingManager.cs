@@ -11,6 +11,8 @@ public class CMovingManager : MonoBehaviour
     [SerializeField] private GameObject room = null;
     [SerializeField] private GameObject backGround = null;
     [SerializeField] private GameObject mask = null;
+    [SerializeField] private GameObject tutorial = null;
+    
 
     private void Awake()
     {
@@ -19,6 +21,8 @@ public class CMovingManager : MonoBehaviour
         iTween.MoveTo(room, iTween.Hash("y", 0, "easeType", "easeOutSine","Time",1f,"delay",0.5f));
         iTween.MoveTo(backGround, iTween.Hash("y", 7, "easeType", "easeOutSine","Time",1f,"delay",0.5f));
         StartCoroutine(FadeInOut(true,0.5f));
+
+        
     }
 
     public void ExitOffice()
@@ -63,5 +67,8 @@ public class CMovingManager : MonoBehaviour
                 break;
             }
         }
+        var isTutorialEnd =CSaveLoadManager.LoadJsonFileToArray<bool>("SaveFiles", "TutorialEnd2");
+        if(isTutorialEnd == null)
+            tutorial.SetActive(true);
     }
 }

@@ -21,7 +21,7 @@ public class CDialog : MonoBehaviour
         _button = transform.Find("SkipButton").GetComponent<Button>();
         _isTouch = false;
         _button.onClick.AddListener(Touch);
-        iTween.MoveBy(_character.gameObject, iTween.Hash("x", -250, "easeType", "easeOutExpo"));
+        iTween.MoveBy(_character.gameObject, iTween.Hash("x", -250,"isLocal",true, "easeType", "easeOutExpo"));
     }
 
     private void Start()

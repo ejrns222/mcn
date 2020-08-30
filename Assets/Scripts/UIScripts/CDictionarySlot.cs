@@ -1,5 +1,4 @@
-﻿using System;
-using Characters;
+﻿using Characters;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +22,9 @@ public class CDictionarySlot : MonoBehaviour
     {
         foreach (var v in CDictionary.AllStreamers)
         {
+            if (streamer == null)
+               return;
+            
             if (v.Key.Tag == streamer.Tag)
             {
                 if (v.Value == false)
@@ -34,7 +36,7 @@ public class CDictionarySlot : MonoBehaviour
                 }
                 else
                 {
-                    transform.Find("Name").GetComponent<Text>().text = streamer.Tag.ToString();
+                    transform.Find("Name").GetComponent<Text>().text = streamer.Name;
                     break;
                 }
             }

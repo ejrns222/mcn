@@ -29,6 +29,10 @@ public class CRecruit : MonoBehaviour
       _probSpecialSummon = new int[5]{20,50,100,200,250};
       _probFreeSummon = new int[5] {0, 0, 30, 50, 100};
       Load();
+   }
+
+   private void Start()
+   {
       Refresh();
    }
 
@@ -95,12 +99,20 @@ public class CRecruit : MonoBehaviour
 
    public void FreeSummon()
    {
+      
       if (CNotify.MembershipLv - _numFreeRecruit == 0)
       {
          Instantiate(popupWindowPrefab, transform.root).GetComponent<CPopUpWindow>().SetText("Error:\n무료횟수 없음");
          return;
       }
       //TODO:광고출력
+      GameObject.Find("ADManager").GetComponent<CAdManager>().rewardHandler += FreeSummonHandler;
+      GameObject.Find("ADManager").GetComponent<CAdManager>().ShowAD();
+      
+   }
+
+   private void FreeSummonHandler()
+   {
       var gatchaResult = StreamerGatcha(_probGeneralSummon);
       Payment(gatchaResult, EWealth.Mileage, 0,false);
 
@@ -117,6 +129,8 @@ public class CRecruit : MonoBehaviour
    /// <returns></returns>
    private StreamerBase StreamerGatcha(int[] prob)
    {
+      CBuffManager.NumProbAB--;
+      CBuffManager.NumProbCDE--;
       var getProb = Random.Range(1, 1001);
             int cumulative = 0;
             ERank? result = null;
@@ -125,10 +139,16 @@ public class CRecruit : MonoBehaviour
             {
                if (i < prob.Length)
                {
-                  if (CNotify.IsDimensionNotify && i < 2)
+                  if (CBuffManager.NumProbAB > 0 && i < 2)
+                  {
                      cumulative += prob[i] + 5;
-                  else if (CNotify.IsBasicNotify && i >= 2)
+                     
+                  }
+                  else if (CBuffManager.NumProbCDE > 0 && i >= 2)
+                  {
                      cumulative += prob[i] + 10;
+                     
+                  }
                   else
                      cumulative += prob[i];
                   
@@ -143,6 +163,10 @@ public class CRecruit : MonoBehaviour
                   break;
                }
             }
+            
+            var isTutorialEnd =CSaveLoadManager.LoadJsonFileToArray<bool>("SaveFiles", "TutorialEnd2");
+            if (isTutorialEnd == null)
+               result = ERank.F;
 
             StreamerBase gatchaResult = null;
             int num;

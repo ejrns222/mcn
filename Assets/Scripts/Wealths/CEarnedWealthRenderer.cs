@@ -22,7 +22,7 @@ namespace Wealths
 
         void FixedUpdate()
         {
-            transform.position += new Vector3(0,-0.02f,0);
+            //transform.position += new Vector3(0,-0.02f,0);
             var color = _text.color;
             color = new Color(color.r,color.g,color.b,color.a - 0.05f);
             _text.color = color;

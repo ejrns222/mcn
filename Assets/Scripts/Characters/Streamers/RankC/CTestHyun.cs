@@ -2,19 +2,16 @@
 {
     public class CTestHyun : StreamerBase
     {
-        public override long Skill(long calculatedValue)
-        {
-            return calculatedValue/10;
-        }
         public CTestHyun()
         {
             Tag = EStreamer.TestHyun;
-            Rank = ERank.E;
+            Name = "BJ현";
+            Rank = ERank.C;
             IncreasingSubs = 5;
-            Subscribers = 1000;
-            Expectation = 50000;
+            Subscribers = 5000;
+            Expectation = 100000;
             AdLevel = 0;
-            AdPrice = 55000;
+            AdPrice = 500000;
         }
     }
 }

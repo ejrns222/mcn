@@ -10,6 +10,7 @@ public class CIntro : MonoBehaviour
     private void Awake()
     {
         _startText = transform.Find("TouchToPlay").GetComponent<Text>();
+        Screen.SetResolution(720, 1280,true);
     }
 
     private void Start()
@@ -47,7 +48,11 @@ public class CIntro : MonoBehaviour
     
     public void ChangeScene()
     {
-        SceneManager.LoadScene("TutorialScene");
+        var bools = CSaveLoadManager.LoadJsonFileToArray<bool>("SaveFiles", "TutorialEnd1");
+        if (bools == null)
+            SceneManager.LoadScene("TutorialScene");
+        else 
+            SceneManager.LoadScene("GameScene");
     }
     
 

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using Characters;
 using UnityEngine;
 using UnityEngine.UI;
 using Wealths;
+using Random = UnityEngine.Random;
 
 namespace UIScripts
 {
@@ -22,13 +24,47 @@ namespace UIScripts
         [SerializeField] private long price = 0;
         [SerializeField] private CCharacterChanger characterChanger = null;
         [SerializeField] public uint index;
-
+        private float _rndTime;
+        private float _deltaTime;
+        
         private void Awake()
         {
             transform.Find("Button").GetComponent<Button>().onClick.AddListener(ButtonClick);
             ChangeState(slotState);
+            _rndTime = Random.Range(0.5f, 3f);
         }
 
+        private void Update()
+        {
+            if (streamer == null)
+                return;
+            _deltaTime += Time.deltaTime;
+            if (_deltaTime >= _rndTime)
+            {
+                StartCoroutine(Donation());
+                _deltaTime = 0;
+                _rndTime = Random.Range(0.5f, 3f);
+            }
+        }
+
+        private IEnumerator Donation()
+        {
+            var text = transform.Find("Display/DonationText").GetComponent<Text>();
+            Color color = new Color(1,1,0,0);
+            text.color = color;
+
+            int donation = Random.Range(1000, (int)streamer.Expectation);
+            donation -= donation % 1000;
+            text.text = donation + "원 후원!!";
+            
+            while (text.color.a < 1)
+            {
+                color.a += 0.05f;
+                text.color = color;
+                yield return new WaitForSeconds(0.02f); 
+            }
+        }
+        
         public void Refresh()
         {
             if (slotState == SlotState.OpenEquipped)
@@ -47,41 +83,46 @@ namespace UIScripts
             Text descText = transform.Find("Desc").GetComponent<Text>();
             Text priceText = transform.Find("Button").Find("priceText").GetComponent<Text>();
             Text buttonText = transform.Find("Button").Find("Text").GetComponent<Text>();
-            Image streamerImg = transform.Find("StreamerImg").GetComponent<Image>();
+            Image streamerImg = transform.Find("Display/StreamerImg").GetComponent<Image>();
+            Image monitorImg = transform.Find("Display/Monitor").GetComponent<Image>();
             Image wealtImg = transform.Find("Button").Find("WealthImg").GetComponent<Image>();
 
             switch (state)
             {
                 case SlotState.OpenEmpty:
                     nameText.text = "Empty";
-                    nameText.transform.localPosition = new Vector3(200,-45,0);
+                    nameText.transform.localPosition = new Vector3(250,-45,0);
                     nameText.fontSize = 70;
                     nameText.color= new Color(0.7058f, 0.7058f, 0.7058f, 1f);
                     descText.text = string.Empty;
                     priceText.text = string.Empty;
                     transform.Find("Button").gameObject.SetActive(true);
-                    buttonText.text = "장착/해제";
-                    streamerImg.sprite = null;
-                    streamerImg.gameObject.SetActive(false);
+                    buttonText.text = "교육시작";
+                    //streamerImg.sprite = null;
+                    //streamerImg.gameObject.SetActive(false);
+                    streamerImg.transform.parent.gameObject.SetActive(true);
+                    monitorImg.sprite = Resources.Load<Sprite>("UIImage/MonitoringNoSignal");
                     streamer = null;
                     wealtImg.gameObject.SetActive(false);
                     break;
                 case SlotState.OpenEquipped:
                     streamer = Player.Instance.equippedStreamers[index];
-                    nameText.text = streamer.Tag.ToString();
-                    nameText.transform.localPosition = new Vector3(130, -15,0);
-                    nameText.fontSize = 60;
+                    nameText.text = streamer.Name;
+                    nameText.transform.localPosition = new Vector3(200, -30,0);
+                    nameText.fontSize = 50;
                     nameText.color= new Color(0.7058f, 0.7058f, 0.7058f, 1f);
                     descText.text = "Rank : " + streamer.Rank +
                                     "\n구독자 수 : " + streamer.Subscribers;
-                    descText.transform.localPosition = new Vector3(130, -80,0);
-                    buttonText.text = "장착/해제";
+                    descText.transform.localPosition = new Vector3(200, -80,0);
+                    buttonText.text = "교체/해제";
                     transform.Find("Button").gameObject.SetActive(true);
                     descText.fontSize = 30;
                     priceText.text = string.Empty;
                     streamerImg.sprite = Resources.Load<Sprite>("CharacterImage/" + streamer.Tag);
-                    streamerImg.color = Color.white;
-                    streamerImg.gameObject.SetActive(true);
+                    //streamerImg.color = Color.white;
+                    //streamerImg.gameObject.SetActive(true);
+                    streamerImg.transform.parent.gameObject.SetActive(true);
+                    monitorImg.sprite = Resources.Load<Sprite>("UIImage/MonitoringBG");
                     wealtImg.gameObject.SetActive(false);
                     break;
                 case SlotState.Locked:
@@ -94,8 +135,9 @@ namespace UIScripts
                     descText.text = string.Empty;
                     priceText.text = UnitConversion.ConverseUnit(price).ConversedUnitToString();
                     buttonText.text = "구매";
-                    streamerImg.sprite = null;
-                    streamerImg.gameObject.SetActive(false);
+                    //streamerImg.sprite = null;
+                    //streamerImg.gameObject.SetActive(false);
+                    streamerImg.transform.parent.gameObject.SetActive(false);
                     streamer = null;
                     break;
                 case SlotState.Disabled:
@@ -107,8 +149,9 @@ namespace UIScripts
                     descText.text = string.Empty;
                     priceText.text = string.Empty;
                     buttonText.text = string.Empty;
-                    streamerImg.sprite = null;
-                    streamerImg.gameObject.SetActive(false);
+                    //streamerImg.sprite = null;
+                    //streamerImg.gameObject.SetActive(false);
+                    streamerImg.transform.parent.gameObject.SetActive(false);
                     streamer = null;
                     break;
             }

@@ -58,7 +58,7 @@ namespace Wealths
                 }
 
                 instanceObj.GetComponent<CEarnedWealthRenderer>().value = value;
-                instanceObj.transform.localPosition = new Vector3(25f, -20f, 0);
+                instanceObj.transform.localPosition = new Vector3(25f, -25f, 0);
             }
         }
     }

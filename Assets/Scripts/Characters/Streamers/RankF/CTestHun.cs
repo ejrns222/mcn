@@ -2,17 +2,13 @@
 {
     public class CTestHun : StreamerBase
     {
-        public override long Skill(long calculatedValue)
-        {
-            return (long) (Player.Instance.FindStreamer(EStreamer.TestHyun) ? calculatedValue * 0.3f : 0);
-        }
-
         public CTestHun()
         {
             Tag = EStreamer.TestHun;
+            Name = "BJ훈";
             Rank = ERank.F;
             IncreasingSubs = 2;
-            Subscribers = 10;
+            Subscribers = 100;
             Expectation = 5000;
             AdLevel = 0;
             AdPrice = 25000;

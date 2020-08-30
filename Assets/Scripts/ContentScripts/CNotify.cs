@@ -9,11 +9,6 @@ using Wealths;
 public class CNotify : MonoBehaviour
 {
     public static uint MembershipLv = 1;
-    public static bool IsBasicNotify;
-    public static bool IsDimensionNotify;
-
-    private DateTime _basicEndTime;
-    private DateTime _dimensionEndTime;
 
     [SerializeField] private GameObject basicNotify = null;
     [SerializeField] private GameObject dimensionNotify = null;
@@ -26,46 +21,7 @@ public class CNotify : MonoBehaviour
         basicNotify.transform.Find("Button").GetComponent<Button>().onClick.AddListener(OnBasicNotifyButton);
         dimensionNotify.transform.Find("Button").GetComponent<Button>().onClick.AddListener(OnDimensionButton);
         membershipLvUp.transform.Find("Button").GetComponent<Button>().onClick.AddListener(OnMembershipLvUpButton);
-        IsBasicNotify = false;
-        IsDimensionNotify = false;
         RefreshMembership();
-    }
-
-    private void FixedUpdate()
-    {
-        if (IsBasicNotify)
-        {
-            var remainTime = _basicEndTime - DateTime.Now;
-            if(remainTime.Days > 0)
-                basicNotify.transform.Find("Panel").Find("TimeText").GetComponent<Text>().text =
-                "남은 시간: " + remainTime.Days + "일 " + remainTime.Hours + "시간";
-            else
-                basicNotify.transform.Find("Panel").Find("TimeText").GetComponent<Text>().text =
-                    "남은 시간: "  + remainTime.Hours + "시간";
-
-            if (remainTime <= TimeSpan.Zero)
-            {
-                IsBasicNotify = true;
-                basicNotify.transform.Find("Panel").Find("TimeText").GetComponent<Text>().text = string.Empty;
-            }
-        }
-
-        if (IsDimensionNotify)
-        {
-            var remainTime = _dimensionEndTime - DateTime.Now;
-            if(remainTime.Days > 0)
-                dimensionNotify.transform.Find("Panel").Find("TimeText").GetComponent<Text>().text =
-                    "남은 시간: " + remainTime.Days + "일 " + remainTime.Hours + "시간";
-            else
-                dimensionNotify.transform.Find("Panel").Find("TimeText").GetComponent<Text>().text =
-                    "남은 시간: "  + remainTime.Hours + "시간";
-
-            if (remainTime <= TimeSpan.Zero)
-            {
-                IsDimensionNotify = true;
-                dimensionNotify.transform.Find("Panel").Find("TimeText").GetComponent<Text>().text = string.Empty;
-            }
-        }
     }
 
     private void OnApplicationQuit()
@@ -75,12 +31,17 @@ public class CNotify : MonoBehaviour
 
     private void Save()
     {
-        //위에 스태틱 3개 저장
+        uint[] array = new uint[1]{MembershipLv};
+        
+        CSaveLoadManager.CreateJsonFileForArray(array,"SaveFiles","Notify");
     }
 
     private void Load()
-    {
-        //스태틱 3개 로드
+    { 
+        var array = CSaveLoadManager.LoadJsonFileToArray<uint>("SaveFiles", "Notify");
+        if (array == null)
+            return;
+        MembershipLv = array[0];
     }
 
     private void OnBasicNotifyButton()
@@ -97,14 +58,7 @@ public class CNotify : MonoBehaviour
         }
 
         Player.Instance.gold -= 1000000;
-        if (!IsBasicNotify)
-        {
-            IsBasicNotify = true;
-            _basicEndTime = DateTime.Now.AddHours(6);
-            return;
-        }
-
-        _basicEndTime = _basicEndTime.AddHours(6);
+        CBuffManager.NumProbCDE += 3;
     }
 
     private void OnDimensionButton()
@@ -121,14 +75,7 @@ public class CNotify : MonoBehaviour
         }
 
         Player.Instance.jewel -= 500;
-        if (!IsDimensionNotify)
-        {
-            IsDimensionNotify = true;
-            _dimensionEndTime = DateTime.Now.AddHours(6);
-            return;
-        }
-
-        _dimensionEndTime = _dimensionEndTime.AddHours(6);
+        CBuffManager.NumProbAB+=3;
     }
 
     private void OnMembershipLvUpButton()
@@ -150,6 +97,7 @@ public class CNotify : MonoBehaviour
 
         Player.Instance.mileage -= price;
         MembershipLv++;
+        Save();
         GameObject.Find("Recruit").GetComponent<CRecruit>().Refresh();
         RefreshMembership();
     }

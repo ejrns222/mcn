@@ -29,6 +29,13 @@ public class CSaveLoadManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        Debug.Log("세이브 시작");
+        ClassesSave();
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        Debug.Log("세이브 시작");
         ClassesSave();
     }
 
@@ -42,6 +49,7 @@ public class CSaveLoadManager : MonoBehaviour
         CMonitoring.Save();
         CTimeManager.SaveGameTime();
         CInventory.Save();
+        
     }
 
     private static Wrapper<T> Wrapping<T>(T[] array)
@@ -60,11 +68,30 @@ public class CSaveLoadManager : MonoBehaviour
     public static void CreateJsonFile(object obj, string createPath, string fileName)
     {
         string jsonData = Encrypt(JsonUtility.ToJson(obj));
-        Debug.Log("저장 내용 " + JsonUtility.ToJson(obj));
-        FileStream fileStream = new FileStream(Application.dataPath + $"/{createPath}/{fileName}.json", FileMode.Create);
-        byte[] data = Encoding.UTF8.GetBytes(jsonData);
-        fileStream.Write(data, 0, data.Length);
-        fileStream.Close();
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!Directory.Exists(Application.persistentDataPath + $"/{createPath}"))
+            {
+                Directory.CreateDirectory(Application.persistentDataPath + $"/{createPath}");
+                Debug.Log("없어서 만듦");
+            }
+
+            FileStream fileStream =
+                new FileStream(Application.persistentDataPath + $"/{createPath}/{fileName}.json",
+                    FileMode.Create);
+            byte[] data = Encoding.UTF8.GetBytes(jsonData);
+            fileStream.Write(data, 0, data.Length);
+            fileStream.Close();
+        }
+        else
+        {
+            FileStream fileStream =
+                new FileStream(Application.dataPath + $"/Resources/{createPath}/{fileName}.json",
+                    FileMode.Create);
+            byte[] data = Encoding.UTF8.GetBytes(jsonData);
+            fileStream.Write(data, 0, data.Length);
+            fileStream.Close();
+        }
     }
 
     /// <summary>
@@ -72,14 +99,37 @@ public class CSaveLoadManager : MonoBehaviour
     /// </summary>
     public static void CreateJsonFileForArray<T>(T[] array, string createPath, string fileName)
     {
-        var obj = Wrapping(array);
-        string test = JsonUtility.ToJson(obj);
-        string jsonData = Encrypt(JsonUtility.ToJson(obj));
-        //Debug.Log("배열 저장 내용 " + JsonUtility.ToJson(obj));
-        FileStream fileStream = new FileStream(Application.dataPath + $"/{createPath}/{fileName}.json", FileMode.Create);
-        byte[] data = Encoding.UTF8.GetBytes(jsonData);
-        fileStream.Write(data, 0, data.Length);
-        fileStream.Close();
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            Debug.Log("세이브 시작");
+            if (!Directory.Exists(Application.persistentDataPath + $"/{createPath}"))
+            {
+                Directory.CreateDirectory(Application.persistentDataPath + $"/{createPath}");
+                Debug.Log("없어서 만듦");
+            }
+            Debug.Log("경로가 있다");
+            var obj = Wrapping(array);
+            string test = JsonUtility.ToJson(obj);
+            string jsonData = Encrypt(JsonUtility.ToJson(obj));
+            FileStream fileStream =
+                new FileStream(Application.persistentDataPath + $"/{createPath}/{fileName}.json",
+                    FileMode.Create);
+            byte[] data = Encoding.UTF8.GetBytes(jsonData);
+            fileStream.Write(data, 0, data.Length);
+            fileStream.Close();
+        }
+        else
+        {
+            var obj = Wrapping(array);
+            string test = JsonUtility.ToJson(obj);
+            string jsonData = Encrypt(JsonUtility.ToJson(obj));
+            FileStream fileStream =
+                new FileStream(Application.dataPath + $"/Resources/{createPath}/{fileName}.json",
+                    FileMode.Create);
+            byte[] data = Encoding.UTF8.GetBytes(jsonData);
+            fileStream.Write(data, 0, data.Length);
+            fileStream.Close();
+        }
     }
     
     /// <summary>
@@ -88,14 +138,35 @@ public class CSaveLoadManager : MonoBehaviour
     /// </summary>
     public static T LoadJsonFile<T>(string loadPath, string fileName) where T : class
     {
-        if (!File.Exists(Application.dataPath + $"/{loadPath}/{fileName}.json"))
-            return null;
-        FileStream fileStream = new FileStream(Application.dataPath +$"/{loadPath}/{fileName}.json", FileMode.Open);
-        byte[] data = new byte[fileStream.Length];
-        fileStream.Read(data, 0, data.Length);
-        fileStream.Close();
-        string jsonData = Encoding.UTF8.GetString(data);
-        return JsonUtility.FromJson<T>(Decrypt(jsonData));
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            
+            if (!File.Exists(Application.persistentDataPath + $"/{loadPath}/{fileName}.json"))
+                return null;
+            FileStream fileStream =
+                new FileStream(Application.persistentDataPath + $"/{loadPath}/{fileName}.json",
+                    FileMode.Open);
+            byte[] data = new byte[fileStream.Length];
+            fileStream.Read(data, 0, data.Length);
+            fileStream.Close();
+            string jsonData = Encoding.UTF8.GetString(data);
+
+            return JsonUtility.FromJson<T>(Decrypt(jsonData));
+        }
+        else
+        {
+            if (!File.Exists(Application.dataPath + $"/Resources/{loadPath}/{fileName}.json"))
+                return null;
+            FileStream fileStream =
+                new FileStream(Application.dataPath + $"/Resources/{loadPath}/{fileName}.json",
+                    FileMode.Open);
+            byte[] data = new byte[fileStream.Length];
+            fileStream.Read(data, 0, data.Length);
+            fileStream.Close();
+            string jsonData = Encoding.UTF8.GetString(data);
+
+            return JsonUtility.FromJson<T>(Decrypt(jsonData));
+        }
     }
 
     /// <summary>
@@ -107,17 +178,38 @@ public class CSaveLoadManager : MonoBehaviour
     /// <typeparam name="T"></typeparam> 컴포넌트
     public static void LoadJsonFileToGameObject<T>(T component, string loadPath, string fileName) where T : Component
     {
-        if (!File.Exists(Application.dataPath + $"/{loadPath}/{fileName}.json"))
-            return;
-        FileStream fileStream = new FileStream(Application.dataPath +$"/{loadPath}/{fileName}.json", FileMode.Open);
-        byte[] data = new byte[fileStream.Length];
-        fileStream.Read(data, 0, data.Length);
-        fileStream.Close();
-        string jsonData = Encoding.UTF8.GetString(data);
-        
-        GameObject tmpObj = new GameObject();
-        var tmpComp = tmpObj.AddComponent<T>();
-        JsonUtility.FromJsonOverwrite(Decrypt(jsonData),component);
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!File.Exists(Application.persistentDataPath + $"/{loadPath}/{fileName}.json"))
+                return;
+            FileStream fileStream =
+                new FileStream(Application.persistentDataPath + $"/{loadPath}/{fileName}.json",
+                    FileMode.Open);
+            byte[] data = new byte[fileStream.Length];
+            fileStream.Read(data, 0, data.Length);
+            fileStream.Close();
+            string jsonData = Encoding.UTF8.GetString(data);
+
+            GameObject tmpObj = new GameObject();
+            var tmpComp = tmpObj.AddComponent<T>();
+            JsonUtility.FromJsonOverwrite(Decrypt(jsonData), component);
+        }
+        else
+        {
+            if (!File.Exists(Application.dataPath + $"/Resources/{loadPath}/{fileName}.json"))
+                return;
+            FileStream fileStream =
+                new FileStream(Application.dataPath + $"/Resources/{loadPath}/{fileName}.json",
+                    FileMode.Open);
+            byte[] data = new byte[fileStream.Length];
+            fileStream.Read(data, 0, data.Length);
+            fileStream.Close();
+            string jsonData = Encoding.UTF8.GetString(data);
+
+            GameObject tmpObj = new GameObject();
+            var tmpComp = tmpObj.AddComponent<T>();
+            JsonUtility.FromJsonOverwrite(Decrypt(jsonData), component);
+        }
     }
 
     /// <summary>
@@ -126,15 +218,39 @@ public class CSaveLoadManager : MonoBehaviour
     /// <returns></returns>
     public static T[] LoadJsonFileToArray<T>(string loadPath, string fileName)
     {
-        if (!File.Exists(Application.dataPath + $"/{loadPath}/{fileName}.json"))
-            return null;
-        FileStream fileStream = new FileStream(Application.dataPath +$"/{loadPath}/{fileName}.json", FileMode.Open);
-        byte[] data = new byte[fileStream.Length];
-        fileStream.Read(data, 0, data.Length);
-        fileStream.Close();
-        string jsonData = Encoding.UTF8.GetString(data);
-        var wrappedClass = JsonUtility.FromJson<Wrapper<T>>(Decrypt(jsonData));
-        return wrappedClass.Items;
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!File.Exists(Application.persistentDataPath + $"/{loadPath}/{fileName}.json"))
+            {
+                Debug.Log("로드 경로가 없음");
+                return null;
+            }
+
+            FileStream fileStream =
+                new FileStream(Application.persistentDataPath + $"/{loadPath}/{fileName}.json",
+                    FileMode.Open);
+            byte[] data = new byte[fileStream.Length];
+            fileStream.Read(data, 0, data.Length);
+            fileStream.Close();
+            string jsonData = Encoding.UTF8.GetString(data);
+            var wrappedClass = JsonUtility.FromJson<Wrapper<T>>(Decrypt(jsonData));
+            Debug.Log("로드 성공?");
+            return wrappedClass.Items;
+        }
+        else
+        {
+            if (!File.Exists(Application.dataPath + $"/Resources/{loadPath}/{fileName}.json")) 
+                return null;
+            FileStream fileStream =
+                new FileStream(Application.dataPath + $"/Resources/{loadPath}/{fileName}.json",
+                    FileMode.Open);
+            byte[] data = new byte[fileStream.Length];
+            fileStream.Read(data, 0, data.Length);
+            fileStream.Close();
+            string jsonData = Encoding.UTF8.GetString(data);
+            var wrappedClass = JsonUtility.FromJson<Wrapper<T>>(Decrypt(jsonData));
+            return wrappedClass.Items;
+        }
     }
     
     //암호화

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Characters;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -41,7 +42,8 @@ public class CDialogManager : MonoBehaviour
             else if(nameAndText[0] != "Me" && nameAndText[0] != _prevName)
             {
                 var gobj = Instantiate(dialog,GameObject.Find("Canvas").transform);
-                gobj.GetComponent<CDialog>().SetName(nameAndText[0]);
+                //string name = CharacterUtil.FindName(nameAndText[0]);
+                gobj.GetComponent<CDialog>().SetName("BJ사장");
                 gobj.GetComponent<CDialog>().SetCharacter(nameAndText[0]);
                 gobj.GetComponent<CDialog>().AddText(nameAndText[1]);
                 _dialogObjects.Add(gobj);
@@ -96,8 +98,12 @@ public class CDialogManager : MonoBehaviour
 
     public void AddOnDialogEnd(OnDialogEndHandler dialogEndHandler)
     {
-        if(onDialogEnd == null)
+        if (onDialogEnd == null)
+        {
             onDialogEnd = dialogEndHandler;
+            return;
+        }
+
         onDialogEnd += dialogEndHandler;
     }
 }

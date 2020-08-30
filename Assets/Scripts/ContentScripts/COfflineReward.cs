@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Util;
+using Wealths;
 
 public class COfflineReward : MonoBehaviour
 {
@@ -18,6 +19,11 @@ public class COfflineReward : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
+
+        var isTutorialEnd =CSaveLoadManager.LoadJsonFileToArray<bool>("SaveFiles", "TutorialEnd2");
+        if(isTutorialEnd == null)
+            gameObject.SetActive(false);
+        
         _touch = transform.Find("Mail").Find("Panel").Find("Touch").GetComponent<Text>();
         _reward = transform.Find("MailBox").Find("Panel").Find("Reward").GetComponent<Text>();
         _isOnce = true;
@@ -27,7 +33,9 @@ public class COfflineReward : MonoBehaviour
     {
         StartCoroutine(FadeInOut());
         _reward.text =
-            $"급여 : {CTimeManager.Instance.todayOfflineSalary} \n편집수당 : {CTimeManager.Instance.todayOfflineGold} \n마일리지 : {CTimeManager.Instance.todayOfflineMileage}";
+            $"급여 : {UnitConversion.ConverseUnit(CTimeManager.Instance.todayOfflineSalary).ConversedUnitToString()} " +
+            $"\n편집수당 : {UnitConversion.ConverseUnit(CTimeManager.Instance.todayOfflineGold).ConversedUnitToString()} " +
+            $"\n마일리지 : {UnitConversion.ConverseUnit(CTimeManager.Instance.todayOfflineMileage).ConversedUnitToString()}";
     }
 
     IEnumerator FadeInOut()

@@ -84,7 +84,7 @@ public class CSummonWindow : MonoBehaviour
                 _bCheck1 = true;
                 isEnd = true;
                 if(!_isSkip)
-                    StartCoroutine(ImgShaking(imgBase.transform, 0.05f, 0.5f, 0.2f));
+                    StartCoroutine(ImgShaking(imgBase.transform, 0.5f, 10f, 0.2f));
             }
 
             check1.transform.localScale = new Vector3(scale,scale);
@@ -106,7 +106,7 @@ public class CSummonWindow : MonoBehaviour
                 _bCheck2 = true;
                 isEnd = true;
                 if(!_isSkip)
-                    StartCoroutine(ImgShaking(imgBase.transform, 0.05f, 0.3f, 0.2f));
+                    StartCoroutine(ImgShaking(imgBase.transform, 0.5f, 10f, 0.2f));
             }
 
             check2.transform.localScale = new Vector3(scale,scale);
@@ -128,7 +128,7 @@ public class CSummonWindow : MonoBehaviour
                 _bCheck3 = true;
                 isEnd = true;
                 if(!_isSkip)
-                    StartCoroutine(ImgShaking(imgBase.transform, 0.05f, 0.3f, 0.2f));
+                    StartCoroutine(ImgShaking(imgBase.transform, 0.5f, 10f, 0.2f));
             }
 
             check3.transform.localScale = new Vector3(scale,scale);
@@ -151,7 +151,7 @@ public class CSummonWindow : MonoBehaviour
                 isEnd = true;
                 
                 if(!_isSkip)
-                    StartCoroutine(ImgShaking(imgBase.transform, 0.05f, 0.3f, 0.2f));
+                    StartCoroutine(ImgShaking(imgBase.transform, 0.5f, 10f, 0.2f));
             }
 
             checkFin.transform.localScale = new Vector3(scale,scale);
@@ -181,7 +181,7 @@ public class CSummonWindow : MonoBehaviour
                 _isImgLoad = true;
                 if (!_isSkip)
                 {
-                    _playingCoroutine = ImgShaking(streamerImg.transform, -0.001f, 0.02f, 2.0f);
+                    _playingCoroutine = ImgShaking(streamerImg.transform, -0.1f, 5f, 2.0f);
                     StartCoroutine(_playingCoroutine);
                 }
             }
@@ -199,7 +199,7 @@ public class CSummonWindow : MonoBehaviour
                     if (!_isSkip)
                     {
                         _timer = -1.5f;
-                        _playingCoroutine = ImgShaking(streamerImg.transform, 0.0005f, 0.02f, 1f);
+                        _playingCoroutine = ImgShaking(streamerImg.transform, 0.05f, 5f, 1f);
                         StartCoroutine(_playingCoroutine);
                     }
                 }
@@ -211,7 +211,7 @@ public class CSummonWindow : MonoBehaviour
                 streamerImg.transform.Find("Mask").GetComponent<Image>().color = color;
                 btn.transform.GetChild(0).GetComponent<Text>().text = "닫기";
                 text.gameObject.SetActive(true);
-                text.text = streamer.Tag + "\nRank : " + streamer.Rank;
+                text.text = streamer.Name + "\nRank : " + streamer.Rank;
                 if (color.a < 0)
                     _bAppear = true;
             }

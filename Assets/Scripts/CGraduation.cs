@@ -22,12 +22,12 @@ public class CGraduation : MonoBehaviour
 
     private void Init()
     {
+        _slots.Clear();
         foreach (var v in CInventory.streamerList)
         {
             if(v == null)
                 continue;
 
-            _slots.Clear();
             if (v.Subscribers >= v.Expectation)
             {
                 GameObject slot = Instantiate(graduateSlotPrefab, slotsTransform);

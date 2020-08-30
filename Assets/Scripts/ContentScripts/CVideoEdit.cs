@@ -43,7 +43,7 @@ public class CVideoEdit : MonoBehaviour
 
     void Update()
     {
-        _slider.value = CTimeManager.Instance.DeltaTimeForDay / CTimeManager.Instance.OneDay;
+        _slider.value = (CTimeManager.Instance.DeltaHourForDay + CTimeManager.Instance.DeltaTimeForHour) / 24;
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class CVideoEdit : MonoBehaviour
             if(v == null)
                 continue;
             if(v.Subscribers < v.Expectation)
-                v.Subscribers += (v.IncreasingSubs * ((uint) (v.AdLevel / 20f) + 1) * (v.AdLevel - 20 * (uint) (v.AdLevel / 20f) / 2));
+                v.Subscribers += (v.IncreasingSubs * ((uint) (v.AdLevel / 20f) + 1) * (1+(v.AdLevel - 20 * (uint) (v.AdLevel / 20f) / 2)));
         }
     }
 
@@ -75,7 +75,13 @@ public class CVideoEdit : MonoBehaviour
 
     public long CalculateGold()
     {
-        long calculatedGold = Player.Instance.EditPay;
+        long calculatedGold = 0;
+        foreach (var v in Player.Instance.equippedStreamers)
+        {
+            if(v == null)
+                continue;
+            calculatedGold += v.Subscribers * 10;
+        }
         ///////////////
         //스킬 계산할 곳
         ///////////////

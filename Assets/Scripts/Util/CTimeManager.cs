@@ -29,8 +29,8 @@ namespace Util
         private class SavedTime
         {
             public float DeltaTimeForHour;
-            public float DeltaTimeForDay;
-            public float DeltaTimeForYear;
+            public int DeltaTimeForDay;
+            public int DeltaTimeForYear;
             public ulong TotalPlayingTime;
             public string LastTime;
         }
@@ -40,24 +40,18 @@ namespace Util
         public static DateTime LastRealTime; //마지막에 게임을 종료했을 때의 실제시간을 저장
 
         private float TimeFactor => CDimensionResearch.ResearchSkill.DAccelLevel / 40f; //클수록 시간이 빠르게 흐른다.
-    
-        private const float _oneHour = 1f;
-        private const float _oneDay = 24f;
-        private const float _oneYear = 8640f;
+        //private float TimeFactor = 0.9f; //Test
 
-
-        private static float _deltaTimeForHour;//저장
-        private static float _deltaTimeForDay;//저장
-        private static float _deltaTimeForYear;//저장
+        private static float _deltaTimeForHour;
+        private static int _deltaHourForDay;
+        private static int _deltaDayForYear;
         private static ulong _totalPlayingGameHour;//저장, 첫게임 시작부터 계속 흐른다.
 
         public float DeltaTimeForHour => _deltaTimeForHour;
-        public float DeltaTimeForDay => _deltaTimeForDay;
-        public float DeltaTimeForYear => _deltaTimeForYear;
+        public float DeltaHourForDay => _deltaHourForDay;
+        public float DeltaDayForYear => _deltaDayForYear;
 
-        public float OneHour => _oneHour* (1f - TimeFactor);
-        public float OneDay => _oneDay * (1f - TimeFactor);
-        public float OneYear => _oneYear * (1f - TimeFactor);
+        public float OneHour => 1* (1f - TimeFactor);
     
         public delegate void OneTimeHandler();
 
@@ -80,8 +74,8 @@ namespace Util
 
             _currentTime = DateTime.Now;
             _deltaTimeForHour = 0;
-            _deltaTimeForDay = 0;
-            _deltaTimeForYear = 0;
+            _deltaHourForDay = 0;
+            _deltaDayForYear = 0;
             _totalPlayingGameHour = 0;
             LoadGameTime();
         
@@ -91,11 +85,8 @@ namespace Util
 
         private void Update()
         {
-            //TODO : 델타타임은 Hour만 남기고 나머진 TotalPlayingHour로 계산하자. 뭔가 이상한듯 연봉을 날짜 중간에 막 받고 그럼
             _deltaTimeForHour += Time.deltaTime;
-            _deltaTimeForDay += Time.deltaTime;
-            _deltaTimeForYear += Time.deltaTime;
-
+            
             var clock = CalcGameTime(_totalPlayingGameHour);
             clockText.text = $"{clock[0]}년 {clock[1]}월 {clock[2]}일 {clock[3]}시";
         
@@ -105,21 +96,23 @@ namespace Util
                 onOneHourElapse?.Invoke();
                 _deltaTimeForHour -= OneHour;
                 _totalPlayingGameHour++;
+                _deltaHourForDay++;
             }
 
-            if (_deltaTimeForDay >= OneDay)
+            if (_deltaHourForDay >= 24)
             {
                 Debug.Log("OnOneGameDay");
                 onOneDayElapse?.Invoke();
                 GameObject.Find("Monitoring")?.GetComponent<CMonitoring>()?.Refresh();
-                _deltaTimeForDay -= OneDay;
+                _deltaHourForDay = 0;
+                _deltaDayForYear++;
             }
 
-            if (_deltaTimeForDay >= OneYear)
+            if (_deltaDayForYear >= 361)
             {
                 Debug.Log("OnOneGameYear");
                 onOneYearElapse?.Invoke();
-                _deltaTimeForYear -= OneYear;
+                _deltaDayForYear = 1;
             }
         
             if(_deltaTimeForHour < 0)
@@ -155,23 +148,23 @@ namespace Util
             
             //모니터링 보상 TODO : 나중에 계산 다시
             long offlineMileage = GameObject.Find("Monitoring").GetComponent<CMonitoring>().CalculateMileage(false) *
-                                  (int) ((deltaGameHour + _deltaTimeForHour) / _oneHour);
-            _deltaTimeForHour = (deltaGameHour + _deltaTimeForHour) % _oneHour;
+                                  (int) ((deltaGameHour + _deltaTimeForHour) / 1);
+            _deltaTimeForHour = (deltaGameHour + _deltaTimeForHour) % 1;
             todayOfflineMileage= offlineMileage / 10 * 3;
             Player.Instance.mileage += todayOfflineMileage; //30%
             Debug.Log("오프라인 보상 마일리지 : " + todayOfflineMileage);
         
             //편집 보상
             long offlineGold = GameObject.Find("VideoEdit").GetComponent<CVideoEdit>().CalculateGold() *
-                               (int) ((deltaGameHour + _deltaTimeForDay) / _oneDay);
-            _deltaTimeForDay = (deltaGameHour + _deltaTimeForDay) % _oneDay;
+                               (int) ((deltaGameHour + _deltaHourForDay) / 24);
+            _deltaHourForDay = (int)(deltaGameHour + _deltaHourForDay) % 24;
             todayOfflineGold= offlineGold / 10 * 3;
             Player.Instance.gold += todayOfflineGold;
             Debug.Log("오프라인 보상 편집수당 : " + todayOfflineGold);
         
-            //월급
-            todayOfflineSalary = GameObject.Find("VideoEdit").GetComponent<CVideoEdit>().CalculateSalary() * (int)((deltaGameHour + _deltaTimeForYear) / _oneYear);
-            _deltaTimeForYear = (deltaGameHour + _deltaTimeForYear) % _oneYear;
+            //연봉
+            todayOfflineSalary = GameObject.Find("VideoEdit").GetComponent<CVideoEdit>().CalculateSalary() * (int)((deltaGameHour/24 + _deltaDayForYear) / 360);
+            _deltaDayForYear = (int)((deltaGameHour/24 + _deltaDayForYear) % 360);
             Player.Instance.gold += todayOfflineSalary;
             Debug.Log(("오프라인 연봉" + todayOfflineSalary));
             
@@ -182,9 +175,9 @@ namespace Util
             SavedTime times = new SavedTime
             {
                 LastTime = JsonUtility.ToJson((JsonDateTime)DateTime.Now),
-                DeltaTimeForDay = _deltaTimeForDay,
+                DeltaTimeForDay = _deltaHourForDay,
                 DeltaTimeForHour = _deltaTimeForHour,
-                DeltaTimeForYear = _deltaTimeForYear,
+                DeltaTimeForYear = _deltaDayForYear,
                 TotalPlayingTime = _totalPlayingGameHour
             };
 
@@ -204,9 +197,9 @@ namespace Util
 
             LastRealTime = JsonUtility.FromJson<JsonDateTime>(times.LastTime);
             Debug.Log("마지막 접속 날짜 : " + LastRealTime);
-            _deltaTimeForDay = times.DeltaTimeForDay;
+            _deltaHourForDay = times.DeltaTimeForDay;
             _deltaTimeForHour = times.DeltaTimeForHour;
-            _deltaTimeForYear = times.DeltaTimeForYear;
+            _deltaDayForYear = times.DeltaTimeForYear;
             _totalPlayingGameHour = times.TotalPlayingTime;
             
         }
@@ -214,10 +207,10 @@ namespace Util
         private uint[] CalcGameTime(ulong totalHour)
         {
             uint[] ret = new uint[4];
-            ret[0] = (uint)totalHour / (uint)_oneYear;
-            ret[1] = ((uint)totalHour - (ret[0] * (uint)_oneYear)) / ((uint)_oneDay * 30) +1;
-            ret[2] = ((uint)totalHour - (ret[0] * (uint)_oneYear) - ((ret[1]-1) * (uint)_oneDay*30)) / (uint)_oneDay;
-            ret[3] = ((uint)totalHour - (ret[0] * (uint)_oneYear) - ((ret[1]-1) * (uint)_oneDay * 30) - (ret[2] * (uint)_oneDay)) / (uint)_oneHour;
+            ret[0] = (uint)totalHour / 8640;
+            ret[1] = ((uint)totalHour - (ret[0] * 8640)) / (24 * 30) +1;
+            ret[2] = ((uint)totalHour - (ret[0] * 8640) - ((ret[1]-1) * 24*30)) / 24 + 1;
+            ret[3] = ((uint)totalHour - (ret[0] * 8640) - ((ret[1]-1) * 24 * 30) - ((ret[2]-1) * 24)) / 1;
             return ret;
         }
     }

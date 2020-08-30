@@ -2,19 +2,16 @@
 {
     public class CGun : StreamerBase
     {
-        public override long Skill(long calculatedValue)
-        {
-            return 0;
-        }
         public CGun()
         {
             Tag = EStreamer.Gun;
+            Name = "BJ건";
             Rank = ERank.D;
             IncreasingSubs = 4;
-            Subscribers = 500;
-            Expectation = 12000;
+            Subscribers = 2500;
+            Expectation = 50000;
             AdLevel = 0;
-            AdPrice = 25000;
+            AdPrice = 200000;
         }
     }
 }

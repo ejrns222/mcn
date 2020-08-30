@@ -9,6 +9,7 @@ public class DMovingManager : MonoBehaviour
     [SerializeField] private GameObject tablet = null;
     [SerializeField] private GameObject backGround = null;
     [SerializeField] private GameObject mask = null;
+    [SerializeField] private GameObject tutorial = null;
 
     private void Awake()
     {
@@ -24,6 +25,16 @@ public class DMovingManager : MonoBehaviour
         iTween.MoveTo(backGround, iTween.Hash("y", -1.77f, "easeType", "easeOutSine","Time",2.5f,"delay",1));
         StartCoroutine(FadeInOut(false,0.5f,"GameScene"));
         CSaveLoadManager.ClassesSave();
+    }
+
+    public void TabletUp()
+    {
+        iTween.MoveTo(tablet, iTween.Hash("y", -190,"isLocal",true, "easeType", "easeOutExpo","Time",1.5f));
+    }
+    
+    public void TabletDown()
+    {
+        iTween.MoveTo(tablet, iTween.Hash("y", -1064,"isLocal",true, "easeType", "easeOutExpo","Time",1.5f));
     }
 
     /// <summary>
@@ -59,5 +70,8 @@ public class DMovingManager : MonoBehaviour
                 break;
             }
         }
+        var isTutorialEnd =CSaveLoadManager.LoadJsonFileToArray<bool>("SaveFiles", "TutorialEnd3");
+        if(isTutorialEnd == null)
+            tutorial.SetActive(true);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Characters;
 using UIScripts;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,8 +9,9 @@ public class CCharacterChanger : MonoBehaviour
 {
     [SerializeField] private CCharacterChangeSlot changeSlotPrefab = null;
     [SerializeField] private GameObject changeSlots = null;
-    private List<GameObject> _changeSlotList = new List<GameObject>(); //현재는 아무곳에도 안 쓰이는 중 캐릭터 선택시 ui변경 예정(선택시 팝업창 생성하고 거기에 정보가 나타나도록)
-    public CEquipSlot selectedEquipSlot;
+    private List<CCharacterChangeSlot> _changeSlotList = new List<CCharacterChangeSlot>(); 
+    public CEquipSlot selectedEquipSlot; //모니터링 클래스에서 정해주는 변수임
+    private CCharacterChangeSlot _selectedSlot;
     
     private void OnEnable()
     {
@@ -21,7 +23,7 @@ public class CCharacterChanger : MonoBehaviour
             GameObject slot;
             slot = Instantiate(changeSlotPrefab.gameObject, changeSlots.transform);
             slot.GetComponent<CCharacterChangeSlot>().characterChanger = this;
-            _changeSlotList.Add(slot);
+            _changeSlotList.Add(slot.GetComponent<CCharacterChangeSlot>());
 
             slot.GetComponentInChildren<Text>().text = v.Tag.ToString();
             slot.GetComponent<CCharacterChangeSlot>().streamer = v;
@@ -29,13 +31,24 @@ public class CCharacterChanger : MonoBehaviour
         }
     }
 
+    public void SelectSlot(CCharacterChangeSlot slot)
+    {
+        _selectedSlot = slot;
+        transform.Find("Panel/StreamerInfo/Text").GetComponent<Text>().text = slot.streamer.Info();
+
+        foreach (var v in _changeSlotList)
+        {
+           v.image.color = Color.white;
+        }
+        slot.image.color = Color.gray;
+    }
+
     /// <summary>
     /// @brief : 인벤토리에 있는 스트리머와 장착한 스트리머를 바꾼다
     /// </summary>
-    /// <param name="slot"></param>  선택한 슬롯
-    public void CharacterChange(CCharacterChangeSlot slot)
+    public void CharacterChange()
     {
-        int invenIdx = CInventory.streamerList.IndexOf(slot.streamer);
+        int invenIdx = CInventory.streamerList.IndexOf(_selectedSlot.streamer);
         int equipIdx = Array.FindIndex(Player.Instance.equippedStreamers, i => i == selectedEquipSlot.streamer);
 
         //if (equipIdx == -1)
